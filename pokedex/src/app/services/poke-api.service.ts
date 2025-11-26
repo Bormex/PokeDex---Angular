@@ -13,4 +13,20 @@ export class PokeApiService {
   fetchPokemonData(pokemonID: string): Observable<any> {
     return this.http.get(this.pokeApi + pokemonID);
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
 }
