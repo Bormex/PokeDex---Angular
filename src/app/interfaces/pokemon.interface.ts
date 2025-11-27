@@ -5,28 +5,28 @@ export interface Pokemon {
   original_name: string;       // Original language name
   index: string;               // 4-digit Pokémon index (0001)
   img: string;                 // Official artwork image URL
-  gifImg: string;              // Official artwork gif-image URL
+  gifImg: string | undefined;              // Official artwork gif-image URL
   height: string;              // z. B. "1.7m"
   weight: string;              // z. B. "90.5kg"
   abilities: string[];         // Capitalized list of abilities
   elements: string[];          // Pokémon type names (Water, Fire...)
   evolutions: Evolution[];     // Deine extrahierten Evolutionsdaten
-  genetik: string;             // Genus (z. B. "Seed Pokémon")
+  genetik: string | undefined;             // Genus (z. B. "Seed Pokémon")
 }
 
 export interface PokemonData {
-  name: string | any[];
+  name: string;
   id: { toString: () => string };
   sprites: {
     other: {
-      [x: string]: { front_default: any };
-      showdown: { front_default: any };
+      [x: string]: { front_default: string };
+      showdown: { front_default: string };
     };
   };
   height: number;
   weight: { toString: () => string };
-  abilities: { ability: { name: string | any[] } }[];
-  types: { type: { name: string | any[] } }[];
+  abilities: { ability: { name: string } }[];
+  types: { type: { name: string } }[];
 }
 
 export interface EvolutionChainNode {
