@@ -120,7 +120,7 @@ export class PokeCardComponent implements OnInit {
             original_name: species.names[0].name,
             index: pokemonData.id.toString().padStart(4, '0'),
             img: pokemonData.sprites.other['official-artwork'].front_default,
-            gifImg: this.checkGifImg(pokemonData.sprites.other.showdown.front_default),  // DAS KANN null sein -> wollen aber undefined um es einheitlich zu halten
+            gifImg: this.getGifImg(pokemonData.sprites.other.showdown.front_default),  // DAS KANN null sein -> wollen aber undefined um es einheitlich zu halten
             height: pokemonData.height / 10 + 'm',
             weight:
                 pokemonData.weight.toString().slice(0, -1) +
@@ -150,7 +150,7 @@ export class PokeCardComponent implements OnInit {
         return undefined;
     }
 
-    checkGifImg(gifImage: string) {
+    getGifImg(gifImage: string) {
         if (gifImage) {
             return gifImage
         }
