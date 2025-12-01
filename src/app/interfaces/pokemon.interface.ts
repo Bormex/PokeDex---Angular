@@ -10,6 +10,7 @@ export interface Pokemon {
   weight: string;              // z. B. "90.5kg"
   abilities: string[];         // Capitalized list of abilities
   elements: string[];          // Pokémon type names (Water, Fire...)
+  elementColor: string,
   evolutions: Evolution[];     // Deine extrahierten Evolutionsdaten
   genetik: string | undefined;             // Genus (z. B. "Seed Pokémon")
 }
