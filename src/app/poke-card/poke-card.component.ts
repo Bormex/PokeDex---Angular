@@ -7,37 +7,30 @@ import {
     EvolutionChainNode,
     Species,
 } from '../interfaces/pokemon.interface';
+import { NgStyle, NgClass } from '@angular/common';
+
 
 @Component({
     selector: 'app-poke-card',
-    imports: [],
+    imports: [NgStyle, NgClass],
     template: `
     <h1>Pokemon Cards Down below</h1>
     <main id="pokemons">
-      <div id="pokemon">
-        <img src="{{ this.pokemon?.img }}" alt="{{ this.pokemon?.img }}" />
-        <img
-          src="{{ this.pokemon?.gifImg }}"
-          alt="{{ this.pokemon?.gifImg }}"
-        />
-        <p>{{ this.pokemon?.index }}</p>
-        <p>{{ this.pokemon?.name }}</p>
-        <p>{{ this.pokemon?.height }}</p>
-        <p>{{ this.pokemon?.weight }}</p>
-        <p>{{ this.pokemon?.abilities }}</p>
-        <p>{{ this.pokemon?.elements }}</p>
-        <p>{{ this.pokemon?.genetik }}</p>
+      <div id="pokemon" [style.background-color]="elementColor[this.pokemon!.elements[0]]">
+        <p id="index">{{ this.pokemon?.index }}</p>
+        
+        <span class="pokeDetails">
+            <p>{{ this.pokemon?.name }}</p>
+            <p>{{ this.pokemon?.original_name }}</p>
+            @for (element of this.pokemon?.elements; track $index) {
+                <p class="element">{{ element }}</p>
+            }
+        </span>
 
-        @for (pokemon of this.pokemon?.evolutions; track $index) {
-        <div>
-          <img src="{{ pokemon.img }}" alt="" />
-          <img src="{{ pokemon.gifImg }}" alt="" />
-          <p>{{ pokemon.index }}</p>
-          <p>{{ pokemon.name }}</p>
-          <p>{{ pokemon.original_name }}</p>
-          <p>{{ pokemon.elements }}</p>
-        </div>
-        }
+        <img id="pokemonImage" src="{{ this.pokemon?.img }}" alt="{{ this.pokemon?.img }}" />
+
+        <img id="pokemonElement" src="/assets/icons/elements/bug.svg" alt="">
+
       </div>
     </main>
   `,
@@ -47,25 +40,25 @@ export class PokeCardComponent implements OnInit {
     constructor(private pokeApi: PokeApiService) { }
     pokemon: Pokemon | undefined;
     items: string[] | undefined;
-    elementColor = {
-        bug: '#92BC2C',
-        dark: '#595761',
-        dragon: '#0C69C8',
-        electric: '#F2D94E',
-        fairy: '#EE90E6',
-        fighting: '#D3425F',
-        fire: '#FBA54C',
-        flying: '#A1BBEC',
-        ghost: '#5F6DBC',
-        grass: '#5FBD58',
-        ground: '#DA7C4D',
-        ice: '#75D0C1',
-        normal: '#A0A29F',
-        poison: '#B763CF',
-        psychic: '#FA8581',
-        rock: '#C9BB8A',
-        steel: '#5695A3',
-        water: '#539DDF',
+    elementColor: Record<string, string> = {
+        Bug: '#92BC2C',
+        Dark: '#595761',
+        Dragon: '#0C69C8',
+        Electric: '#F2D94E',
+        Fairy: '#EE90E6',
+        Fighting: '#D3425F',
+        Fire: '#FBA54C',
+        Flying: '#A1BBEC',
+        Ghost: '#5F6DBC',
+        Grass: '#5FBD58',
+        Ground: '#DA7C4D',
+        Ice: '#75D0C1',
+        Normal: '#A0A29F',
+        Poison: '#B763CF',
+        Psychic: '#FA8581',
+        Rock: '#C9BB8A',
+        Steel: '#5695A3',
+        Water: '#539DDF',
     };
 
     ngOnInit(): void {
@@ -75,7 +68,8 @@ export class PokeCardComponent implements OnInit {
     //
     //       HIER POKEMON INDEX REIN
     //
-    pokenum = 1000;
+    pokenum = 29;
+
 
     getPokemonWithEvolution(id: number) {
         this.pokeApi
@@ -103,14 +97,14 @@ export class PokeCardComponent implements OnInit {
             )
             .subscribe({
                 next: ({ pokemonData, evolutionChain, species }) => {
-                    this.pokeInterface(pokemonData, evolutionChain, species);
+                    this.pokeCardInterface(pokemonData, evolutionChain, species);
                     console.log(this.pokemon);
                 },
                 error: (err) => console.error(err),
             });
     }
 
-    pokeInterface(
+    pokeCardInterface(
         pokemonData: PokemonData,
         evolutionChain: { chain: EvolutionChainNode },
         species: Species
@@ -154,7 +148,7 @@ export class PokeCardComponent implements OnInit {
         if (gifImage) {
             return gifImage
         }
-        return undefined
+        return undefined;
     }
 
     extractEvolutions(chain: EvolutionChainNode) {

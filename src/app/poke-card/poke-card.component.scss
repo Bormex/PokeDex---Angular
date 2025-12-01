@@ -1,0 +1,58 @@
+main {
+    margin: 240px 240px;
+}
+
+#pokemon {
+    display: flex;
+    position: relative;
+    border: solid 1px;
+    width: fit-content;
+    padding: 24px;
+
+        #index {
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+
+    .pokeDetails {
+        :nth-child(1) {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        :nth-child(2) {
+            font-size: 14px;
+        }
+
+        .element {
+            padding: 12px;
+            margin: 4px;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+        }
+
+        .element::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: black;
+            opacity: .1;
+            z-index: -1;
+        }
+    }
+
+    #pokemonImage {
+        width: 100%; 
+        max-width: 124px;
+    }
+
+    #pokemonElement {
+        position: absolute; 
+        bottom: -100px; 
+        filter: invert(.2);
+        opacity: 0.35; 
+        scale: .5;
+    }
+}
