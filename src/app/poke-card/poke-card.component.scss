@@ -1,24 +1,37 @@
 main {
-    margin: 240px 240px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    //flex-wrap: wrap;      // for later use
 }
 
 #pokemon {
+                margin: 200px 0; // For demo purposes only
     display: flex;
     position: relative;
-    border: solid 1px;
+    border-radius: 16px;
     width: fit-content;
     padding: 24px;
+    cursor: pointer;
+    overflow: hidden;
+    
+     &:hover {
+        box-shadow: 2px 4px 16px #00000029;
+        transform: scale3d(1.01, 1.01, 1.01);
+     }
 
         #index {
             position: absolute;
             top: 0;
             right: 0;
+            margin: 8px;
         }
 
     .pokeDetails {
         :nth-child(1) {
             font-size: 20px;
             font-weight: bold;
+            filter: drop-shadow(0px 0px 6px rgb(0, 0, 0, 0.1));
         }
 
         :nth-child(2) {
@@ -44,15 +57,18 @@ main {
     }
 
     #pokemonImage {
+        z-index: 1;
         width: 100%; 
         max-width: 124px;
+        filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
     }
 
     #pokemonElement {
         position: absolute; 
-        bottom: -100px; 
-        filter: invert(.2);
-        opacity: 0.35; 
-        scale: .5;
+        bottom: 5%; 
+        right: 0;
+        width: 50%;
+        opacity: .4;
+        filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.3));
     }
 }

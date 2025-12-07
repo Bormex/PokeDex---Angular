@@ -15,27 +15,30 @@ import {
     template: `
     <h1>Pokemon Cards Down below</h1>
     <main id="pokemons">
-      <div id="pokemon" [style.background-color]="this.pokemon?.elementColor">
-        <p id="index">{{ this.pokemon?.index }}</p> 
-        <span class="pokeDetails">
-            <p>{{ this.pokemon?.name }}</p>
-            <p>{{ this.pokemon?.original_name }}</p>
-            @for (element of this.pokemon?.elements; track $index) {
-                <p class="element">{{ element }}</p>
-            }
-        </span>
+        @for(pokemon of pokemonBufferArray; track $index) {
+            <div id="pokemon" [style.background]="'linear-gradient(to top, ' + pokemon.elementColor + ', #f0fdf4)'">
+                <p id="index">{{ pokemon.index }}</p> 
+                <span class="pokeDetails">
+                    <p>{{ pokemon.name }}</p>
+                    <p>{{ pokemon.original_name }}</p>
+                    @for (element of pokemon.elements; track $index) {
+                        <p class="element">{{ element[0].toUpperCase() + element.slice(1) }}</p>
+                    }
+                </span>
 
-        <img id="pokemonImage" src="{{ this.pokemon?.img }}" alt="{{ this.pokemon?.img }}" />
+                <img id="pokemonImage" src="{{ pokemon.img }}" alt="{{ pokemon.img }}" />
 
-        <img id="pokemonElement" src="/assets/icons/elements/bug.svg" alt="">
+                <img id="pokemonElement" src="/assets/icons/elements/{{ pokemon.elements[0] }}.svg" alt="">
 
-      </div>
+            </div>
+        }
     </main>
   `,
     styleUrl: './poke-card.component.scss',
 })
 export class PokeCardComponent implements OnInit {
     constructor(private pokeApi: PokeApiService) { }
+    pokemonBufferArray: Pokemon[] = [];
     pokemon: Pokemon | undefined;
     items: string[] | undefined;
     elementColor: Record<string, string> = {
@@ -60,7 +63,11 @@ export class PokeCardComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        this.getPokemonWithEvolution(this.pokenum);
+        for (let index = 1; index < 21; index++) {
+            let id = index;
+            this.getPokemonWithEvolution(id);
+        }
+        console.log(this.pokemonBufferArray);
     }
 
     //
@@ -96,18 +103,21 @@ export class PokeCardComponent implements OnInit {
             .subscribe({
                 next: ({ pokemonData, evolutionChain, species }) => {
                     this.pokeCardInterface(pokemonData, evolutionChain, species);
-                    console.log(this.pokemon);
+                   // console.log(this.pokemon);
                 },
                 error: (err) => console.error(err),
             });
     }
-
+    
     pokeCardInterface(
         pokemonData: PokemonData,
         evolutionChain: { chain: EvolutionChainNode },
         species: Species
     ) {
-        this.pokemon = {
+        
+
+        this.pokemonBufferArray.push(
+            this.pokemon = {
             name: pokemonData.name[0].toUpperCase() + pokemonData.name.slice(1),
             original_name: species.names[0].name,
             index: pokemonData.id.toString().padStart(4, '0'),
@@ -121,22 +131,23 @@ export class PokeCardComponent implements OnInit {
                 'kg',
             abilities: pokemonData.abilities.map(
                 (a: { ability: { name: string | any[] } }) =>
-                    a.ability.name[0].toUpperCase() + a.ability.name.slice(1)
+                    a.ability.name
             ),
             elements: pokemonData.types.map(
                 (t: { type: { name: string | any[] } }) =>
-                    t.type.name[0].toUpperCase() + t.type.name.slice(1)
+                    t.type.name
             ),
             elementColor: this.getElementColor(pokemonData.types),
             evolutions: this.extractEvolutions(evolutionChain.chain),
             genetik: this.getGenetik(species.genera),
-        } as Pokemon;
+            } as Pokemon
+        )
     }
 
     getElementColor(ele: { type: { name: any; }; }[]) {
         const eleColorName = ele[0].type.name;
         const eleColorHexCode = this.elementColor[eleColorName]
-        console.log(eleColorName, eleColorHexCode);
+        // console.log(eleColorName, eleColorHexCode);
         return eleColorHexCode
     }
 
@@ -187,7 +198,7 @@ export class PokeCardComponent implements OnInit {
             for (const evo of chain.evolves_to) {
                 await fetchEvolutionPokemons(evo);
             }
-        }
+        }        
         return evoPokemon;
     }
 }
