@@ -34,7 +34,7 @@ import {
         }
     </main>
 
-    <button (click)="loadMore(21)" style="background-color: black; color: white; padding: 24px; width: 100%">Load More</button>
+    <button (click)="loadMore()" style="background-color: black; color: white; padding: 24px; width: 100%">Load More</button>
   `,
     styleUrl: './poke-card.component.scss',
 })
@@ -69,20 +69,12 @@ export class PokeCardComponent implements OnInit {
         console.log(this.pokemonBufferArray);
     }
 
-    //
-    //       HIER POKEMON INDEX REIN
-    //
-    pokenum = 25;
-
-    loadMore(nextId: number) {
-      debugger
-      this.loadPokemons(nextId)
-      console.log(nextId);
-
+    loadMore() {
+        const startPointOfLastIndexId = this.pokemonBufferArray.length + 1;
+        this.loadPokemons(startPointOfLastIndexId);
     }
 
     loadPokemons(startIndexPokemon: number) {
-      console.log(startIndexPokemon);
       length = startIndexPokemon + 20;
       for (let index = startIndexPokemon; index < length; index++) {
         let id = index;
@@ -117,7 +109,7 @@ export class PokeCardComponent implements OnInit {
             .subscribe({
                 next: ({ pokemonData, evolutionChain, species }) => {
                     this.pokeCardInterface(pokemonData, evolutionChain, species);
-                   // console.log(this.pokemon);
+                                        // console.log(this.pokemon);
                 },
                 error: (err) => console.error(err),
             });
@@ -128,7 +120,6 @@ export class PokeCardComponent implements OnInit {
         evolutionChain: { chain: EvolutionChainNode },
         species: Species
     ) {
-
 
         this.pokemonBufferArray.push(
             this.pokemon = {
@@ -161,7 +152,7 @@ export class PokeCardComponent implements OnInit {
     getElementColor(ele: { type: { name: any; }; }[]) {
         const eleColorName = ele[0].type.name;
         const eleColorHexCode = this.elementColor[eleColorName]
-        // console.log(eleColorName, eleColorHexCode);
+                        // console.log(eleColorName, eleColorHexCode);
         return eleColorHexCode
     }
 
