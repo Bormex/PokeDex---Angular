@@ -14,7 +14,7 @@ main {
     padding: 24px;
     cursor: pointer;
     overflow: hidden;
-    
+
      &:hover {
         box-shadow: 2px 4px 16px #00000029;
         transform: scale3d(1.01, 1.01, 1.01);
@@ -28,6 +28,8 @@ main {
         }
 
     .pokeDetails {
+      margin-right: 16px;
+
         :nth-child(1) {
             font-size: 20px;
             font-weight: bold;
@@ -39,16 +41,18 @@ main {
         }
 
         .element {
-            padding: 12px;
-            margin: 4px;
+            color: rgba(255, 255, 255, 0.7);
+            padding: 4px;
             position: relative;
             z-index: 1;
             text-align: center;
+            margin: 12px 0;
         }
 
         .element::before {
             content: "";
             position: absolute;
+            border-radius: 160px;
             inset: 0;
             background: black;
             opacity: .1;
@@ -58,14 +62,14 @@ main {
 
     #pokemonImage {
         z-index: 1;
-        width: 100%; 
-        max-width: 124px;
+        width: 100%;
+        max-width: 160px;
         filter: drop-shadow(1px 2px 2px rgba(0, 0, 0, 0.2));
     }
 
     #pokemonElement {
-        position: absolute; 
-        bottom: 5%; 
+        position: absolute;
+        bottom: 5%;
         right: 0;
         width: 50%;
         opacity: .4;

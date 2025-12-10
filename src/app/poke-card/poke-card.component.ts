@@ -17,7 +17,7 @@ import {
     <main id="pokemons">
         @for(pokemon of pokemonBufferArray; track $index) {
             <div id="pokemon" [style.background]="'linear-gradient(to top, ' + pokemon.elementColor + ', #f0fdf4)'">
-                <p id="index">{{ pokemon.index }}</p> 
+                <p id="index">{{ pokemon.index }}</p>
                 <span class="pokeDetails">
                     <p>{{ pokemon.name }}</p>
                     <p>{{ pokemon.original_name }}</p>
@@ -33,6 +33,8 @@ import {
             </div>
         }
     </main>
+
+    <button (click)="loadMore(21)" style="background-color: black; color: white; padding: 24px; width: 100%">Load More</button>
   `,
     styleUrl: './poke-card.component.scss',
 })
@@ -63,10 +65,7 @@ export class PokeCardComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        for (let index = 1; index < 21; index++) {
-            let id = index;
-            this.getPokemonWithEvolution(id);
-        }
+        this.loadPokemons(1);
         console.log(this.pokemonBufferArray);
     }
 
@@ -75,6 +74,21 @@ export class PokeCardComponent implements OnInit {
     //
     pokenum = 25;
 
+    loadMore(nextId: number) {
+      debugger
+      this.loadPokemons(nextId)
+      console.log(nextId);
+
+    }
+
+    loadPokemons(startIndexPokemon: number) {
+      console.log(startIndexPokemon);
+      length = startIndexPokemon + 20;
+      for (let index = startIndexPokemon; index < length; index++) {
+        let id = index;
+        this.getPokemonWithEvolution(id);
+      }
+    }
 
     getPokemonWithEvolution(id: number) {
         this.pokeApi
@@ -108,13 +122,13 @@ export class PokeCardComponent implements OnInit {
                 error: (err) => console.error(err),
             });
     }
-    
+
     pokeCardInterface(
         pokemonData: PokemonData,
         evolutionChain: { chain: EvolutionChainNode },
         species: Species
     ) {
-        
+
 
         this.pokemonBufferArray.push(
             this.pokemon = {
@@ -198,7 +212,7 @@ export class PokeCardComponent implements OnInit {
             for (const evo of chain.evolves_to) {
                 await fetchEvolutionPokemons(evo);
             }
-        }        
+        }
         return evoPokemon;
     }
 }
