@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PokeApiService } from '../services/poke-api.service';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, switchMap, concatMap, from, Subscription } from 'rxjs';
 import {
     Pokemon,
     PokemonData,
@@ -38,9 +38,12 @@ import {
   `,
     styleUrl: './poke-card.component.scss',
 })
-export class PokeCardComponent implements OnInit {
+export class PokeCardComponent implements OnInit, OnDestroy {
+    
     constructor(private pokeApi: PokeApiService) { }
+
     pokemonBufferArray: Pokemon[] = [];
+    subscriptions: Subscription[] = [];
     pokemon: Pokemon | undefined;
     items: string[] | undefined;
     elementColor: Record<string, string> = {
@@ -65,7 +68,8 @@ export class PokeCardComponent implements OnInit {
     };
 
     ngOnInit(): void {
-        this.loadPokemons(1);
+        const startPokemon = 1;
+        this.loadPokemons(startPokemon);
         console.log(this.pokemonBufferArray);
     }
 
@@ -75,20 +79,23 @@ export class PokeCardComponent implements OnInit {
     }
 
     loadPokemons(startIndexPokemon: number) {
-      length = startIndexPokemon + 20;
-      for (let index = startIndexPokemon; index < length; index++) {
-        let id = index;
-        this.getPokemonWithEvolution(id);
-      }
+      const sub = from(Array.from({ length: 20 }, (_, i) => startIndexPokemon + i))
+                    .pipe(
+                        concatMap(id => this.getPokemonWithEvolution(id))
+                    )
+                    .subscribe({
+                        error: (err) => console.error(err),
+                        complete: () => console.log('Alle Pokémons geladen:', this.pokemonBufferArray)
+                    });
+      this.subscriptions.push(sub);
     }
 
     getPokemonWithEvolution(id: number) {
-        this.pokeApi
+        return this.pokeApi
             .fetchPokemonData(`pokemon/${id}`)
             .pipe(
                 switchMap((pokemonData) =>
                     this.pokeApi.fetchPokemonData(`pokemon-species/${id}`).pipe(
-                        // gibt alles vom ID pokemon zurück
                         map((species) => ({ pokemonData, species }))
                     )
                 ),
@@ -104,22 +111,19 @@ export class PokeCardComponent implements OnInit {
                                 species,
                             }))
                         )
-                )
-            )
-            .subscribe({
-                next: ({ pokemonData, evolutionChain, species }) => {
+                ),
+                map(({ pokemonData, evolutionChain, species }) => {
                     this.pokeCardInterface(pokemonData, evolutionChain, species);
-                                        // console.log(this.pokemon);
-                },
-                error: (err) => console.error(err),
-            });
-    }
-
+                    return void 0;
+                })
+            );
+    }    
+    
     pokeCardInterface(
         pokemonData: PokemonData,
         evolutionChain: { chain: EvolutionChainNode },
         species: Species
-    ) {
+        ) {
 
         this.pokemonBufferArray.push(
             this.pokemon = {
@@ -171,6 +175,10 @@ export class PokeCardComponent implements OnInit {
             return gifImage
         }
         return undefined;
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(sub => sub.unsubscribe());
     }
 
     extractEvolutions(chain: EvolutionChainNode) {
