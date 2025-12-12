@@ -35,7 +35,8 @@ main {
     }    
 
     .pokeDetails {
-      margin-right: 16px;
+        max-width: 50%;
+        width: 100%;
 
         :nth-child(1) {
             font-size: 20px;
@@ -49,11 +50,12 @@ main {
 
         .element {
             color: rgba(255, 255, 255, 0.7);
-            padding: 4px;
+            padding: 6px;
             position: relative;
             z-index: 1;
             text-align: center;
-            margin: 12px 0;
+            margin: 12px 48px;
+            margin-left: 0;
         }
 
         .element::before {
