@@ -1,5 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
 import { PokeCardComponent } from "./poke-card/poke-card.component";
 import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.component";
 
@@ -7,9 +6,11 @@ import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.compo
   selector: 'app-root',
   imports: [PokeCardComponent, LoadingSpinnerComponent],
   template: `
+
     @if(!allPokemonsRendered) {
-    <app-loading-spinner></app-loading-spinner>
+      <app-loading-spinner [more]="onLoadMore(true)"></app-loading-spinner>
     }
+    
     <header>
       <h1>PokeDex</h1>
       <input
@@ -20,7 +21,7 @@ import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.compo
       />
     </header>
 
-    <app-poke-card></app-poke-card>
+    <app-poke-card (pokemonsLoaded)="tooglePokemonSpinner()"></app-poke-card>
 
   `,
   styleUrl: './app.component.scss',
@@ -33,14 +34,21 @@ export class AppComponent {
     this.allPokemonsRendered = false;
   }
 
-  @ViewChild(PokeCardComponent) pokeCardComponent!: PokeCardComponent;
-
-  ngAfterViewInit() {
-    // child ist jetzt verfügbar
-    console.log(this.pokeCardComponent);
+  tooglePokemonSpinner() {
+    if (!this.allPokemonsRendered) {
+      this.allPokemonsRendered = true;
+    } else {
+      this.allPokemonsRendered = false;
+    }
   }
 
-  callChild() {
-    this.pokeCardComponent; // direkte Methode aufrufen
+  onLoadMore(boolean: boolean) {
+    if (boolean) {
+      return false;
+    } else {
+      return true;
+    }
   }
+
+
 }

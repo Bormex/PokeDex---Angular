@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
 import { PokeApiService } from '../services/poke-api.service';
 import { map, switchMap, concatMap, from, Subscription } from 'rxjs';
 import {
@@ -63,7 +63,11 @@ import {
 export class PokeCardComponent implements OnInit, OnDestroy {
 
   constructor(private pokeApi: PokeApiService) { }
+  
+  @Output() pokemonsLoaded = new EventEmitter<void>();
+  @Output() onLoadMore = new EventEmitter<void>();
 
+  
   pokemonBufferArray: Pokemon[] = [];
   subscriptions: Subscription[] = [];
   pokemon: Pokemon | undefined;
@@ -93,11 +97,14 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     const startPokemon = 1;
     this.loadPokemons(startPokemon);
     console.log(this.pokemonBufferArray);
+    this.toggleScrollBarOnLoad('add');
   }
 
   loadMore() {
-    const startPointOfLastIndexId = this.pokemonBufferArray.length + 1;
-    this.loadPokemons(startPointOfLastIndexId);
+    this.toggleScrollBarOnLoad('add'); 
+    this.pokemonsLoaded.emit();
+    const startPointOfLastRenderedPokemonId = this.pokemonBufferArray.length + 1;
+    this.loadPokemons(startPointOfLastRenderedPokemonId);
   }
 
   loadPokemons(startIndexPokemon: number) {
@@ -107,8 +114,11 @@ export class PokeCardComponent implements OnInit, OnDestroy {
       .pipe(concatMap((id) => this.getPokemonWithEvolution(id)))
       .subscribe({
         error: (err) => console.error(err),
-        complete: () =>
-          console.log('Alle Pokémons geladen:', this.pokemonBufferArray),
+        complete: () => { 
+          this.pokemonsLoaded.emit();
+          console.log("All Pokemons loaded", this.pokemonBufferArray);
+          this.toggleScrollBarOnLoad('remove');
+        }
       });
     this.subscriptions.push(sub);
   }
@@ -234,4 +244,15 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     }
     return evoPokemon;
   }
+
+
+
+
+ toggleScrollBarOnLoad(attribute: 'add' | 'remove') {
+    document.body.classList[attribute]('loading');
+ }
+
+
 }
+
+
