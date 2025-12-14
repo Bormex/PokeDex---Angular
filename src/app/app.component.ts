@@ -7,10 +7,6 @@ import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.compo
   imports: [PokeCardComponent, LoadingSpinnerComponent],
   template: `
 
-    @if(!allPokemonsRendered) {
-      <app-loading-spinner [more]="onLoadMore(true)"></app-loading-spinner>
-    }
-    
     <header>
       <h1>PokeDex</h1>
       <input
@@ -20,6 +16,10 @@ import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.compo
         placeholder="Suche nach Pokemon"
       />
     </header>
+
+    @if(!allPokemonsRendered) {
+      <app-loading-spinner></app-loading-spinner>
+    }
 
     <app-poke-card (pokemonsLoaded)="tooglePokemonSpinner()"></app-poke-card>
 
@@ -39,14 +39,6 @@ export class AppComponent {
       this.allPokemonsRendered = true;
     } else {
       this.allPokemonsRendered = false;
-    }
-  }
-
-  onLoadMore(boolean: boolean) {
-    if (boolean) {
-      return false;
-    } else {
-      return true;
     }
   }
 

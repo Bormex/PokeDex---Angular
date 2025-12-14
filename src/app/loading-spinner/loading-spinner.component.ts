@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 
 @Component({
@@ -23,7 +23,7 @@ import { Component, Input, OnInit } from '@angular/core';
 
 
     <span>
-      Loading @if(more) {more} Pokemon's
+      Loading Pokemon's
     </span>
   `,
   styles: `
@@ -91,17 +91,9 @@ import { Component, Input, OnInit } from '@angular/core';
 
 
     
+    
    
 
   `,
 })
-export class LoadingSpinnerComponent {
-
-  @Input() more: boolean = false;
-
-  ngOnInit() {
-   // this.more = false;
-  }
- 
-
-}
+export class LoadingSpinnerComponent { }

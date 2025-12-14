@@ -65,9 +65,7 @@ export class PokeCardComponent implements OnInit, OnDestroy {
   constructor(private pokeApi: PokeApiService) { }
   
   @Output() pokemonsLoaded = new EventEmitter<void>();
-  @Output() onLoadMore = new EventEmitter<void>();
 
-  
   pokemonBufferArray: Pokemon[] = [];
   subscriptions: Subscription[] = [];
   pokemon: Pokemon | undefined;
@@ -244,9 +242,6 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     }
     return evoPokemon;
   }
-
-
-
 
  toggleScrollBarOnLoad(attribute: 'add' | 'remove') {
     document.body.classList[attribute]('loading');
