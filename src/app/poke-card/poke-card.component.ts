@@ -13,10 +13,8 @@ import {
   selector: 'app-poke-card',
   imports: [],
   template: `
-
     <!-- <app-pokemon-overlay dient zu direkt einseitigen overlay und nicht nur dazu "addiert" wenn nicht frag noch gpt ^^nohand -->
 
-    <h1>Pokemon Cards Down below</h1>
     <main id="pokemons">
       @for(pokemon of pokemonBufferArray; track $index) {
       <div
@@ -61,10 +59,11 @@ import {
   styleUrl: './poke-card.component.scss',
 })
 export class PokeCardComponent implements OnInit, OnDestroy {
+  constructor(private pokeApi: PokeApiService) {}
 
-  constructor(private pokeApi: PokeApiService) { }
-  
   @Output() pokemonsLoaded = new EventEmitter<void>();
+
+  @Output() pokemonBufferChange = new EventEmitter<Pokemon[]>();
 
   pokemonBufferArray: Pokemon[] = [];
   subscriptions: Subscription[] = [];
@@ -99,9 +98,8 @@ export class PokeCardComponent implements OnInit, OnDestroy {
   }
 
   loadMore() {
-    this.toggleScrollBarOnLoad('add'); 
-    this.pokemonsLoaded.emit();
-    const startPointOfLastRenderedPokemonId = this.pokemonBufferArray.length + 1;
+    const startPointOfLastRenderedPokemonId =
+      this.pokemonBufferArray.length + 1;
     this.loadPokemons(startPointOfLastRenderedPokemonId);
   }
 
@@ -112,11 +110,12 @@ export class PokeCardComponent implements OnInit, OnDestroy {
       .pipe(concatMap((id) => this.getPokemonWithEvolution(id)))
       .subscribe({
         error: (err) => console.error(err),
-        complete: () => { 
-          this.pokemonsLoaded.emit();
-          console.log("All Pokemons loaded", this.pokemonBufferArray);
+        complete: () => {
+          this.pokemonBufferChange.emit(this.pokemonBufferArray); // Emit the updated buffer
+          const closeLoadingSpinner = this.pokemonsLoaded.emit();
+          console.log('All Pokemons loaded', this.pokemonBufferArray);
           this.toggleScrollBarOnLoad('remove');
-        }
+        },
       });
     this.subscriptions.push(sub);
   }
@@ -243,11 +242,9 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     return evoPokemon;
   }
 
- toggleScrollBarOnLoad(attribute: 'add' | 'remove') {
+  toggleScrollBarOnLoad(attribute: 'add' | 'remove') {
     document.body.classList[attribute]('loading');
- }
-
-
+  }
 }
 
 
