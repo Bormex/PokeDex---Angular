@@ -25,7 +25,7 @@ import {
       >
         <p id="index">{{ pokemon.index }}</p>
         <span class="pokeDetails">
-          <p>{{ pokemon.name }}</p>
+          <p class="name">{{ pokemon.name }}</p>
           <p>{{ pokemon.original_name }}</p>
           @for (element of pokemon.elements; track $index) {
           <p class="element">
@@ -63,7 +63,7 @@ export class PokeCardComponent implements OnInit, OnDestroy {
 
   @Output() pokemonsLoaded = new EventEmitter<void>();
 
-  @Output() pokemonBufferChange = new EventEmitter<Pokemon[]>();
+  @Output() pokemonBufferLoadedPokemons = new EventEmitter<any>();
 
   pokemonBufferArray: Pokemon[] = [];
   subscriptions: Subscription[] = [];
@@ -93,7 +93,6 @@ export class PokeCardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const startPokemon = 1;
     this.loadPokemons(startPokemon);
-    console.log(this.pokemonBufferArray);
     this.toggleScrollBarOnLoad('add');
   }
 
@@ -111,9 +110,9 @@ export class PokeCardComponent implements OnInit, OnDestroy {
       .subscribe({
         error: (err) => console.error(err),
         complete: () => {
-          this.pokemonBufferChange.emit(this.pokemonBufferArray); // Emit the updated buffer
+          this.pokemonBufferLoadedPokemons.emit(this.pokeArraaay); // Emit the updated buffer
           const closeLoadingSpinner = this.pokemonsLoaded.emit();
-          console.log('All Pokemons loaded', this.pokemonBufferArray);
+          //console.log('All Pokemons loaded', this.pokemonBufferArray);
           this.toggleScrollBarOnLoad('remove');
         },
       });
@@ -147,11 +146,15 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     );
   }
 
+  pokeArraaay: string[] = [];
+
   pokeCardInterface(
     pokemonData: PokemonData,
     evolutionChain: { chain: EvolutionChainNode },
     species: Species
   ) {
+    this.pokeArraaay.push(pokemonData.name);
+
     this.pokemonBufferArray.push(
       (this.pokemon = {
         name: pokemonData.name[0].toUpperCase() + pokemonData.name.slice(1),

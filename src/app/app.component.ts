@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { PokeCardComponent } from "./poke-card/poke-card.component";
 import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.component";
 import { Pokemon } from './interfaces/pokemon.interface';
 
 @Component({
   selector: 'app-root',
-  imports: [PokeCardComponent, LoadingSpinnerComponent],
+  imports: [PokeCardComponent, LoadingSpinnerComponent, FormsModule],
   template: `
     <header>
       <h1>PokeDex</h1>
@@ -14,7 +15,7 @@ import { Pokemon } from './interfaces/pokemon.interface';
         name="search"
         id="search"
         placeholder="searching Pokemon"
-        (input)="searchingPokemon($event)"
+        (input)="searchingPokemon()"
         [(ngModel)]="searchQuery"
       />
     </header>
@@ -23,11 +24,13 @@ import { Pokemon } from './interfaces/pokemon.interface';
     <app-loading-spinner></app-loading-spinner>
     }
 
+    @if(true) {
     <app-poke-card
       (pokemonsLoaded)="tooglePokemonSpinner()"
-      (pokemonBufferChange)="onPokemonBufferChange($event)"
+      (pokemonBufferLoadedPokemons)="onPokemonBufferChange($event)"
     >
     </app-poke-card>
+    }
   `,
   styleUrl: './app.component.scss',
 })
@@ -36,22 +39,38 @@ export class AppComponent {
   allPokemonsRendered: boolean;
   pokemonBuffer!: Pokemon[];
 
-  searchingPokemon(event: Event) {
-    console.log((event.target as HTMLInputElement).value);
-    const InputValue = (event.target as HTMLInputElement).value;
+  searchQuery: string = '';
+  array: string[] = [];
 
-    this.pokemonBuffer = this.pokemonBuffer.filter((pokemon) =>
-      pokemon.name
-        .toLowerCase()
-        .includes(
-          (document.getElementById('search') as HTMLInputElement).value.toLowerCase()
-        )
-    );
+  searchingPokemon() {
+    this.searchFilter(this.searchQuery);
+  }
+
+  searchFilter(tippedLetters: string) {
+
+    if (this.searchQuery.length > 3) {
+      const getLoadedPokename = document.getElementsByClassName('name');
+
+      for (let i = 0; i < getLoadedPokename.length; i++) {
+        const element = document.getElementsByClassName('name')[i].innerHTML.toLocaleLowerCase();
+        const el = document.querySelectorAll('#pokemon')[i];
+        document.querySelectorAll('#pokemon')[i].classList.add('none');
+
+
+          if (element.includes(tippedLetters) || element == tippedLetters) {    // oder muss noch an einer anderen stelle anfangen?? aber funzt erma
+             console.log(element, tippedLetters);
+             document.querySelectorAll('#pokemon')[i].classList.add('flex')
+
+             break
+          }
 
 
 
-    // gib nicht ganzen buffer raus setze nebem dem konstrukt im Pokecard ein weiter buffer rein
-    // nur für die suche
+
+
+      }
+    }
+
   }
 
   constructor() {
@@ -59,9 +78,8 @@ export class AppComponent {
   }
 
   // Neue Methode, die das Event behandelt
-  onPokemonBufferChange(buffer: Pokemon[]) {
-    this.pokemonBuffer = buffer;
-    console.log('Pokemon Buffer im Parent:', this.pokemonBuffer);
+  onPokemonBufferChange(array: string[]) {
+    console.log('KSAFHSAKFS', array);
   }
 
   tooglePokemonSpinner() {
