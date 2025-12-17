@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { NgStyle } from '@angular/common';
 import { PokeApiService } from '../services/poke-api.service';
 import { map, switchMap, concatMap, from, Subscription } from 'rxjs';
 import {
@@ -11,50 +12,56 @@ import {
 
 @Component({
   selector: 'app-poke-card',
-  imports: [],
+  imports: [NgStyle],
   template: `
     <!-- <app-pokemon-overlay dient zu direkt einseitigen overlay und nicht nur dazu "addiert" wenn nicht frag noch gpt ^^nohand -->
 
-    <main id="pokemons">
-      @for(pokemon of pokemonBufferArray; track $index) {
-      <div
-        id="pokemon"
-        [style.background]="
-          'linear-gradient(to top, ' + pokemon.elementColor + ', #f0fdf4)'
-        "
-      >
-        <p id="index">{{ pokemon.index }}</p>
-        <span class="pokeDetails">
-          <p class="name">{{ pokemon.name }}</p>
-          <p>{{ pokemon.original_name }}</p>
-          @for (element of pokemon.elements; track $index) {
-          <p class="element">
-            {{ element[0].toUpperCase() + element.slice(1) }}
-          </p>
-          }
-        </span>
+    <main>
+      <div id="pokemons">
+        @for(pokemon of pokemonBufferArray; track $index) {
+          <div
+            id="pokemon"
+            [ngStyle]="{
+              'background': 'linear-gradient(to top, ' + pokemon.elementColor + ', #f0fdf4)',
+              '--glow-color': pokemon.elementColor
+            }"
+            [title]="pokemon.name"
+          >
+            <p id="index">{{ pokemon.index }}</p>
+            <span class="pokeDetails">
+              <p class="name">{{ pokemon.name }}</p>
+              <p>{{ pokemon.original_name }}</p>
+              @for (element of pokemon.elements; track $index) {
+                <p class="element">
+                  {{ element[0].toUpperCase() + element.slice(1) }}
+                </p>
+              }
+            </span>
 
-        <img
-          id="pokemonImage"
-          src="{{ pokemon.img }}"
-          alt="{{ pokemon.img }}"
-        />
+            <img style="background-image: url('/assets/icons/elements/fire.svg');"
+              id="pokemonImage"
+              src="{{ pokemon.img }}"
+              alt="{{ pokemon.img }}"
+            />
 
-        <img
-          id="pokemonElement"
-          src="/assets/icons/elements/{{ pokemon.elements[0] }}.svg"
-          alt=""
-        />
+            <img
+              id="pokemonElement"
+              src="/assets/icons/elements/{{ pokemon.elements[0] }}.svg"
+              alt=""
+            />
+          </div>
+        }
       </div>
-      }
+
+      <button id="loadMoreButton" (click)="loadMore()">
+        Load More
+        <img src="/assets/icons/pokeball.svg" alt="">
+
+      </button>
+
     </main>
 
-    <button
-      (click)="loadMore()"
-      style="background-color: black; color: white; padding: 24px; width: 100%"
-    >
-      Load More
-    </button>
+    
   `,
   styleUrl: './poke-card.component.scss',
 })
@@ -62,8 +69,6 @@ export class PokeCardComponent implements OnInit, OnDestroy {
   constructor(private pokeApi: PokeApiService) {}
 
   @Output() pokemonsLoaded = new EventEmitter<void>();
-
-  @Output() pokemonBufferLoadedPokemons = new EventEmitter<any>();
 
   pokemonBufferArray: Pokemon[] = [];
   subscriptions: Subscription[] = [];
@@ -93,7 +98,7 @@ export class PokeCardComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     const startPokemon = 1;
     this.loadPokemons(startPokemon);
-    this.toggleScrollBarOnLoad('add');
+    this.toggleScrollBarOnLoad('hidden');
   }
 
   loadMore() {
@@ -110,10 +115,9 @@ export class PokeCardComponent implements OnInit, OnDestroy {
       .subscribe({
         error: (err) => console.error(err),
         complete: () => {
-          this.pokemonBufferLoadedPokemons.emit(this.pokeArraaay); // Emit the updated buffer
           const closeLoadingSpinner = this.pokemonsLoaded.emit();
           //console.log('All Pokemons loaded', this.pokemonBufferArray);
-          this.toggleScrollBarOnLoad('remove');
+          this.toggleScrollBarOnLoad('auto');
         },
       });
     this.subscriptions.push(sub);
@@ -146,15 +150,11 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     );
   }
 
-  pokeArraaay: string[] = [];
-
   pokeCardInterface(
     pokemonData: PokemonData,
     evolutionChain: { chain: EvolutionChainNode },
     species: Species
   ) {
-    this.pokeArraaay.push(pokemonData.name);
-
     this.pokemonBufferArray.push(
       (this.pokemon = {
         name: pokemonData.name[0].toUpperCase() + pokemonData.name.slice(1),
@@ -245,8 +245,8 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     return evoPokemon;
   }
 
-  toggleScrollBarOnLoad(attribute: 'add' | 'remove') {
-    document.body.classList[attribute]('loading');
+  toggleScrollBarOnLoad(attribute: string) {
+    document.body.style.overflow = attribute;
   }
 }
 

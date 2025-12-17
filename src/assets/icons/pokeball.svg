@@ -1,0 +1,54 @@
+<svg
+  width="400"
+  height="400"
+  viewBox="0 0 200 200"
+  xmlns="http://www.w3.org/2000/svg"
+>
+
+  <defs>
+    <!-- Ausstanzung -->
+    <mask id="pokeball-cut">
+      <rect width="200" height="200" fill="white"/>
+      <circle cx="100" cy="100" r="42" fill="black"/>
+    </mask>
+
+    <!-- obere Hälfte (endet vor der Mitte) -->
+    <clipPath id="clip-top">
+      <rect x="0" y="0" width="200" height="92"/>
+    </clipPath>
+
+    <!-- untere Hälfte (beginnt nach der Mitte) -->
+    <clipPath id="clip-bottom">
+      <rect x="0" y="108" width="200" height="92"/>
+    </clipPath>
+  </defs>
+
+  <!-- obere Außenschale -->
+  <circle
+    cx="100"
+    cy="100"
+    r="90"
+    fill="#ffffff"
+    mask="url(#pokeball-cut)"
+    clip-path="url(#clip-top)"
+  />
+
+  <!-- untere Außenschale -->
+  <circle
+    cx="100"
+    cy="100"
+    r="90"
+    fill="#ffffff"
+    mask="url(#pokeball-cut)"
+    clip-path="url(#clip-bottom)"
+  />
+
+  <!-- Mittelpunkt (unverändert) -->
+  <circle
+    cx="100"
+    cy="100"
+    r="30"
+    fill="#ffffff"
+  />
+
+</svg>

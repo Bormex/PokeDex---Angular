@@ -1,5 +1,52 @@
 main {
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 24px;
+
+    #loadMoreButton {
+        background: linear-gradient(-60deg, #9e67d8 40%, #7c3aed 100%);
+        color: white;
+        padding: 16px;
+        font-size: 21px;
+        border-radius: 40px;
+        margin: 0 auto;
+        border: 0;
+        position: relative;
+        overflow: hidden;
+        min-width: 124px;
+        width: 100%;
+        max-width: 256px;
+        margin: 64px 0;
+        
+
+        &:hover {
+            box-shadow: 2px 4px 16px #00000029, inset 0 0 12px rgba(0, 0, 0, .1);
+            transform: scale3d(1.02, 1.02, 1.02);
+            transition: transform 0.3s ease;
+        }
+
+        img {
+            width: 40%;
+            position: absolute;
+            right: 0;
+            transform: translate(40%, -20%);
+            opacity: 0.4;
+            filter: drop-shadow(0px 0px 12px black);
+        }
+    }  
+}
+
+.none {
+  display: none !important;
+}
+
+.flex {
+  display: flex !important;
+}
+
+#pokemons {
+    display: flex;
     flex-wrap: wrap;
     justify-content: center;
     gap: 24px;
@@ -17,10 +64,8 @@ main {
     overflow: hidden;
 
     &:hover {
-        box-shadow: 2px 4px 16px #00000029;
-        transform: scale3d(1.01, 1.01, 1.01);
-        transition: transform 0.3s ease;
-
+        --glow-color: var(--element-color, currentColor);
+        animation: pokeCardGlow 1.5s steps(60) infinite;
         #pokemonImage {
             transform: scale3d(1.05, 1.05, 1.05);
             transition: transform 0.3s ease;
@@ -83,13 +128,20 @@ main {
         width: 50%;
         opacity: .4;
         filter: drop-shadow(3px 3px 2px rgba(0, 0, 0, 0.3));
+    } 
+}
+
+@keyframes pokeCardGlow {
+    0% {
+        box-shadow: 0 0 4px var(--glow-color, currentColor), 
+        inset 0 0 12px rgba(0, 0, 0, .1);
+    } 
+    50% {
+        box-shadow: 0 0 14px var(--glow-color, currentColor),
+        inset 0 0 12px rgba(0, 0, 0, .1);
     }
-}
-
-.none {
-  display: none !important;
-}
-
-.flex {
-  display: flex !important;
+    100% {
+        box-shadow: 0 0 7px var(--glow-color, currentColor),
+        inset 0 0 12px rgba(0, 0, 0, .1);
+    }
 }

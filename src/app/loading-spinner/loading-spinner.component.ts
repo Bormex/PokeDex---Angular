@@ -6,7 +6,7 @@ import { Component } from '@angular/core';
   imports: [],
   template: `
     
-    <svg xmlns="http://www.w3.org/2000/svg" width="1e3" height="1e3" version="1.1" viewBox="0 0 264.58 264.58"> 
+    <!-- <svg xmlns="http://www.w3.org/2000/svg" width="1e3" height="1e3" version="1.1" viewBox="0 0 264.58 264.58"> 
       <g class="shadow" transform="translate(0 -32.417)"> 
         <g transform="translate(42.106 42.808)"> 
           <path d="m206.57 121.73a118.09 118.09 0 0 1-118.09 118.09 118.09 118.09 0 0 1-118.09-118.09 118.09 118.09 0 0 1 118.09-118.09 118.09 118.09 0 0 1 118.09 118.09z" fill="#333" stroke-width="0"/> 
@@ -19,8 +19,8 @@ import { Component } from '@angular/core';
           <circle cx="88.482" cy="121.73" r="21.941" fill="#fff"/> 
         </g> 
       </g> 
-    </svg>
-
+    </svg> -->
+    <img src="/assets/icons/pokemon-loading.svg" alt="">
 
     <span>
       Loading Pokemon's
@@ -40,15 +40,12 @@ import { Component } from '@angular/core';
       z-index: 1001;
       background-color: rgba(255, 255, 255);
 
-      svg {
+      img {
         width: 19rem;
         height: 19rem;
         animation: bounce-spin-60hz 1.5s steps(60, end) infinite;
         will-change: transform;
-        
-        >g {  
-          filter: drop-shadow(0 0 0.2rem black);
-        }
+        //filter: drop-shadow(0 0 0.2rem black);
       }
 
       span {
@@ -81,13 +78,31 @@ import { Component } from '@angular/core';
 
  
     @keyframes bounce-spin-60hz {
-      0%   { transform: translateY(0) rotate(0deg) scale(1); }
-      20%  { transform: translateY(-6px) rotate(90deg) scale(1.03); }
-      40%  { transform: translateY(0) rotate(180deg) scale(0.98); }
-      60%  { transform: translateY(-3px) rotate(250deg) scale(1.01); }
-      80%  { transform: translateY(0) rotate(310deg) scale(0.995); }
-      100% { transform: translateY(0) rotate(360deg) scale(1); }
-    }
+      0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        filter: drop-shadow(0 0 2px rgba(0,0,0,0.4));
+      }
+      20% {
+        transform: translateY(-12px) rotate(90deg) scale(1.1);
+        filter: drop-shadow(0 12px 10px rgba(0,0,0,0.5));
+      }
+      40% {
+        transform: translateY(0) rotate(180deg) scale(0.97);
+        filter: drop-shadow(0 3px 3px rgba(0,0,0,0.35));
+      }
+      60% {
+        transform: translateY(-6px) rotate(250deg) scale(1.05);
+        filter: drop-shadow(0 8px 6px rgba(0,0,0,0.45));
+      }
+      80% {
+        transform: translateY(0) rotate(310deg) scale(0.99);
+        filter: drop-shadow(0 3px 3px rgba(0,0,0,0.35));
+      }
+      100% {
+        transform: translateY(0) rotate(360deg) scale(1);
+        filter: drop-shadow(0 0 2px rgba(0,0,0,0.4));
+      }
+  }
 
 
     

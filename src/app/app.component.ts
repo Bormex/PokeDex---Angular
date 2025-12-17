@@ -1,88 +1,102 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { NgStyle } from '@angular/common';
 import { PokeCardComponent } from "./poke-card/poke-card.component";
 import { LoadingSpinnerComponent } from "./loading-spinner/loading-spinner.component";
 import { Pokemon } from './interfaces/pokemon.interface';
 
 @Component({
   selector: 'app-root',
-  imports: [PokeCardComponent, LoadingSpinnerComponent, FormsModule],
+  imports: [PokeCardComponent, LoadingSpinnerComponent, FormsModule, NgStyle],
   template: `
     <header>
-      <h1>PokeDex</h1>
+      <h1>{{ title }}</h1>
       <input
-        type="search"
+        type="text"
         name="search"
         id="search"
+        #searchInput
         placeholder="searching Pokemon"
-        (input)="searchingPokemon()"
+        (input)="searchingPokemon(this.searchQuery.toLowerCase())"
+        (focus)="openSearchBar()"
+        (blur)="closeSearchBar()"
         [(ngModel)]="searchQuery"
+        [ngStyle]="searchBarOpen ? { 'width': '100%', 'padding': '0.5rem 1.75rem', 'cursor': 'auto' } : {}"
       />
     </header>
 
     @if(!allPokemonsRendered) {
-    <app-loading-spinner></app-loading-spinner>
+      <app-loading-spinner></app-loading-spinner>
     }
 
-    @if(true) {
-    <app-poke-card
-      (pokemonsLoaded)="tooglePokemonSpinner()"
-      (pokemonBufferLoadedPokemons)="onPokemonBufferChange($event)"
-    >
+  
+    <app-poke-card (pokemonsLoaded)="tooglePokemonSpinner()">
     </app-poke-card>
-    }
+    
   `,
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-  title = 'pokedex';
-  allPokemonsRendered: boolean;
-  pokemonBuffer!: Pokemon[];
 
-  searchQuery: string = '';
-  array: string[] = [];
-
-  searchingPokemon() {
-    this.searchFilter(this.searchQuery);
+  constructor() {
+    this.allPokemonsRendered = false;
+    this.searchBarOpen = false;
   }
 
-  searchFilter(tippedLetters: string) {
+  title = 'Pokédex';
+  allPokemonsRendered: boolean;
+  pokemonBuffer!: Pokemon[];
+  searchBarOpen: boolean = false;
+  searchQuery: string = '';
+  @ViewChild('searchInput') searchInput!: ElementRef<HTMLInputElement>;
 
-    if (this.searchQuery.length > 3) {
-      const getLoadedPokename = document.getElementsByClassName('name');
+  tooglePokemonSpinner() {
+    if (!this.allPokemonsRendered) this.allPokemonsRendered = true;
+  }
 
-      for (let i = 0; i < getLoadedPokename.length; i++) {
-        const element = document.getElementsByClassName('name')[i].innerHTML.toLocaleLowerCase();
-        const el = document.querySelectorAll('#pokemon')[i];
-        document.querySelectorAll('#pokemon')[i].classList.add('none');
+  openSearchBar() {
+    this.searchBarOpen = !this.searchBarOpen; 
+  }
 
+  closeSearchBar() {
+    setTimeout(() => {
+      this.searchBarOpen = !this.searchBarOpen;
+      console.log(this.searchInput);
+      
+    }, 2000);
+  }
+  
+  /*
+  *
+  * Function for searching Pokemon by name JUST for currently loaded Pokemons NOT all Pokemons from API
+  */
+  searchingPokemon(tippedLetters: string) {
+    const allLoadedPokemonCards = document.querySelectorAll('#pokemon');
+    const allLoadedPokemonNameFields = document.getElementsByClassName('name');
+    const renderMoreButton = document.getElementById('loadMoreButton');
 
-          if (element.includes(tippedLetters) || element == tippedLetters) {    // oder muss noch an einer anderen stelle anfangen?? aber funzt erma
-             console.log(element, tippedLetters);
-             document.querySelectorAll('#pokemon')[i].classList.add('flex')
+    if (this.searchQuery.length >= 1) {
 
-             break
+      for (let i = 0; i < allLoadedPokemonNameFields.length; i++) {
+        const pokemonLoadedNames = allLoadedPokemonNameFields[i].innerHTML.toLocaleLowerCase();
+        allLoadedPokemonCards[i].classList.add('none');
+        renderMoreButton!.classList.add('none');
+
+          if (pokemonLoadedNames[0] === tippedLetters[0]) {  // first letter match
+            if (pokemonLoadedNames.includes(tippedLetters)) {  // includes the tipped letters
+             allLoadedPokemonCards[i].classList.remove('none')
+            }  
           }
+          
+      }
 
-
-
-
-
+    } else {
+      renderMoreButton!.classList.remove('none');
+      for (let i = 0; i < allLoadedPokemonCards.length; i++) {
+        allLoadedPokemonCards[i].classList.remove('none');
       }
     }
 
   }
 
-  constructor() {
-    this.allPokemonsRendered = false;
-  }
-
-  // Neue Methode, die das Event behandelt
-  onPokemonBufferChange(array: string[]) {
-    console.log('KSAFHSAKFS', array);
-  }
-
-  tooglePokemonSpinner() {
-    if (!this.allPokemonsRendered) this.allPokemonsRendered = true;
-  }
 }
