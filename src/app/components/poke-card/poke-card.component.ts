@@ -1,20 +1,23 @@
-import { Component, OnDestroy, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnDestroy, OnInit, Output, EventEmitter, signal } from '@angular/core';
 import { NgStyle } from '@angular/common';
-import { PokeApiService } from '../services/poke-api.service';
+import { PokeApiService } from '../../services/poke-api.service';
 import { map, switchMap, concatMap, from, Subscription } from 'rxjs';
 import {
     Pokemon,
     PokemonData,
     EvolutionChainNode,
     Species,
-} from '../interfaces/pokemon.interface';
+} from '../../interfaces/pokemon.interface';
+import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.component";
 
 
 @Component({
   selector: 'app-poke-card',
-  imports: [NgStyle],
+  imports: [NgStyle, PokemonOverlayComponent],
   template: `
     <!-- <app-pokemon-overlay dient zu direkt einseitigen overlay und nicht nur dazu "addiert" wenn nicht frag noch gpt ^^nohand -->
+    <app-pokemon-overlay></app-pokemon-overlay>
+    
 
     <main>
       <div id="pokemons">
@@ -26,6 +29,7 @@ import {
               '--glow-color': pokemon.elementColor
             }"
             [title]="pokemon.name"
+            (click)="getPokemoneDetails({pokemon})"
           >
             <p id="index">{{ pokemon.index }}</p>
             <span class="pokeDetails">
@@ -68,8 +72,19 @@ import {
 export class PokeCardComponent implements OnInit, OnDestroy {
   constructor(private pokeApi: PokeApiService) {}
 
-  @Output() pokemonsLoaded = new EventEmitter<void>();
+  readonly lodingPokemonOverlay = signal(false);
+  readonly pokemonObj = signal<Pokemon | null>(null);
 
+
+
+  getPokemoneDetails(pokemon: { pokemon: Pokemon }) {
+    this.pokemonObj.set(pokemon.pokemon);
+    this.lodingPokemonOverlay.set(true);
+    console.log(pokemon);
+    
+  }
+
+  @Output() pokemonsLoaded = new EventEmitter<void>();
   pokemonBufferArray: Pokemon[] = [];
   subscriptions: Subscription[] = [];
   pokemon: Pokemon | undefined;
@@ -116,7 +131,6 @@ export class PokeCardComponent implements OnInit, OnDestroy {
         error: (err) => console.error(err),
         complete: () => {
           const closeLoadingSpinner = this.pokemonsLoaded.emit();
-          //console.log('All Pokemons loaded', this.pokemonBufferArray);
           this.toggleScrollBarOnLoad('auto');
         },
       });
@@ -164,12 +178,8 @@ export class PokeCardComponent implements OnInit, OnDestroy {
         gifImg: this.getGifImg(
           pokemonData.sprites.other.showdown.front_default
         ), // DAS KANN null sein -> wollen aber undefined um es einheitlich zu halten
-        height: pokemonData.height / 10 + 'm',
-        weight:
-          pokemonData.weight.toString().slice(0, -1) +
-          '.' +
-          pokemonData.weight.toString().slice(-1) +
-          'kg',
+        height: pokemonData.height / 10,
+        weight: pokemonData.weight / 10,
         abilities: pokemonData.abilities.map(
           (a: { ability: { name: string | any[] } }) => a.ability.name
         ),

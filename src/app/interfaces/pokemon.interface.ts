@@ -6,8 +6,8 @@ export interface Pokemon {
   index: string;               // 4-digit Pokémon index (0001)
   img: string;                 // Official artwork image URL
   gifImg: string | undefined;              // Official artwork gif-image URL
-  height: string;              // z. B. "1.7m"
-  weight: string;              // z. B. "90.5kg"
+  height: number;              // z. B. 1.7
+  weight: number;              // z. B. "90.5kg"
   abilities: string[];         // Capitalized list of abilities
   elements: string[];          // Pokémon type names (Water, Fire...)
   elementColor: string,
@@ -25,7 +25,7 @@ export interface PokemonData {
     };
   };
   height: number;
-  weight: { toString: () => string };
+  weight: number;
   abilities: { ability: { name: string } }[];
   types: { type: { name: string } }[];
 }
