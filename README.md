@@ -1,59 +1,121 @@
-# Pokedex
+# Pokédex - Angular
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.11.
+Eine interaktive Pokédex-Anwendung, die mit **Angular 19** entwickelt wurde. Die Anwendung ermöglicht es Benutzern, Pokémon zu durchsuchen, detaillierte Informationen zu betrachten und ihre Evolutionsketten zu entdecken.
 
-## Development server
+## 🎯 Funktionalität
 
-To start a local development server, run:
+Die Pokédex-Anwendung bietet folgende Features:
+
+- **Pokémon Durchsuchen**: Durchsuche nach Pokémon nach Namen mithilfe der Suchleiste
+- **Pokémon Anzeigen**: Zeige Pokémon-Karten mit grundlegenden Informationen an
+- **Detailansicht**: Klicke auf eine Pokémon-Karte, um detaillierte Informationen in einem Overlay anzuzeigen
+- **Evolutionsketten**: Entdecke die Evolutionsketten von Pokémon
+- **Live-Daten**: Alle Daten werden von der [PokéAPI](https://pokeapi.co/) abgerufen
+- **Responsive Design**: Optimiert für Desktop und mobile Geräte
+
+## 🚀 Projektstart
+
+### Anforderungen
+
+Stelle sicher, dass folgende Programme installiert sind:
+- **Node.js** (Version 18+ empfohlen)
+- **npm** oder **yarn**
+
+### Installation
+
+Klone das Repository und installiere die Abhängigkeiten:
+
+```bash
+git clone <repository-url>
+cd PokeDex---Angular
+npm install
+```
+
+### Entwicklungsserver starten
+
+Starte den Entwicklungsserver mit folgendem Befehl:
+
+```bash
+npm start
+```
+
+oder alternativ:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
+Öffne dann deinen Browser und navigiere zu:
+```
+http://localhost:4200/
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Die Anwendung wird automatisch neu geladen, wenn du Quelldateien änderst.
 
-```bash
-ng generate --help
+## 📁 Projektstruktur
+
+```
+src/
+├── app/
+│   ├── components/
+│   │   ├── poke-card/              # Hauptkomponente für Pokémon-Kartenliste
+│   │   ├── pokemon-overlay/        # Detailansicht für Pokémon-Informationen
+│   │   └── loading-spinner/        # Ladeindikator-Komponente
+│   ├── services/
+│   │   └── poke-api.service.ts     # Service für API-Anfragen an PokéAPI
+│   ├── interfaces/
+│   │   ├── pokemon.interface.ts    # Schnittstelle für Pokémon-Daten
+│   │   └── pokemon_evolutions.interface.ts  # Schnittstelle für Evolutionsdaten
+│   ├── app.component.ts            # Haupt-App-Komponente mit Suchfunktion
+│   └── app.config.ts               # Anwendungskonfiguration
+├── assets/                         # Statische Ressourcen und Icons
+└── styles.scss                     # Globale Styles
 ```
 
-## Building
+## 🛠️ Verfügbare NPM-Befehle
 
-To build the project run:
+| Befehl | Beschreibung |
+|--------|-------------|
+| `npm start` | Startet den Entwicklungsserver |
+| `npm run build` | Erstellt einen produktiven Build |
+| `npm run watch` | Build im Watch-Modus (für Entwicklung) |
+| `npm test` | Führt Unit-Tests mit Karma aus |
 
-```bash
-ng build
-```
+## 🏗️ Build für Produktion
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Um das Projekt für die Produktion zu bauen:
 
 ```bash
-ng e2e
+npm run build
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Die kompilierten Dateien werden im `dist/`-Verzeichnis gespeichert. Der Build ist optimiert für Leistung und Geschwindigkeit.
 
-## Additional Resources
+## 🧪 Testen
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Führe die Unit-Tests aus:
+
+```bash
+npm test
+```
+
+Dies startet den Karma Test Runner und führt alle Tests aus.
+
+## 📚 Verwendete Technologien
+
+- **Angular 19** - Framework für die Benutzeroberflächenentwicklung
+- **TypeScript** - Typsichere Programmiersprache
+- **SCSS** - Stilsheets für Responsive Design
+- **RxJS** - Reactive Programming Library
+- **HttpClient** - Für API-Anfragen
+- **PokéAPI** - Öffentliche API mit Pokémon-Daten
+
+## 📖 Weitere Ressourcen
+
+- [Angular Dokumentation](https://angular.dev)
+- [Angular CLI Dokumentation](https://angular.dev/tools/cli)
+- [PokéAPI Dokumentation](https://pokeapi.co/docs/v2)
+
+## 📝 Lizenz
+
+Dieses Projekt ist Teil eines persönlichen Lernprojekts.
