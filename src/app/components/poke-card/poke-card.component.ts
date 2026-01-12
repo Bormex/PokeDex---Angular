@@ -15,9 +15,8 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
   selector: 'app-poke-card',
   imports: [NgStyle, PokemonOverlayComponent],
   template: `
-    <!-- <app-pokemon-overlay dient zu direkt einseitigen overlay und nicht nur dazu "addiert" wenn nicht frag noch gpt ^^nohand -->
+  
     <app-pokemon-overlay></app-pokemon-overlay>
-    
 
     <main>
       <div id="pokemons">
