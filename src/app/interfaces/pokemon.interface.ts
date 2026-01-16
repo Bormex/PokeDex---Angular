@@ -10,7 +10,8 @@ export interface Pokemon {
   weight: number;              // z. B. "90.5kg"
   abilities: string[];         // Capitalized list of abilities
   elements: string[];          // Pokémon type names (Water, Fire...)
-  elementColor: string,
+  elementColor: string;
+  stats: Stats[];
   evolutions: Evolution[];     // Deine extrahierten Evolutionsdaten
   genetik: string | undefined;             // Genus (z. B. "Seed Pokémon")
 }
@@ -26,11 +27,13 @@ export interface PokemonData {
   };
   height: number;
   weight: number;
+  stats: { stat: { name: string }; base_stat: number }[];
   abilities: { ability: { name: string } }[];
   types: { type: { name: string } }[];
 }
 
 export interface EvolutionChainNode {
+  evolution_details: EvolutionDetail[];
   species: {
     name: string;
     url: string;
@@ -38,7 +41,22 @@ export interface EvolutionChainNode {
   evolves_to: EvolutionChainNode[];
 }
 
+interface EvolutionDetail {
+  min_level: number | null;
+  item: {
+    name: string;
+    url: string;
+  } | null;
+}
+
 export interface Species {
   names: { name: string }[];
   genera: { genus: string }[];
 }
+
+export interface Stats {
+  name: string;
+  value: number;
+  percent_progressbar: number;
+}
+

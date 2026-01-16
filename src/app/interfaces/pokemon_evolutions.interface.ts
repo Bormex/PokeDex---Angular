@@ -4,5 +4,7 @@ export interface Evolution {
   img: string;
   gifImg: string | undefined;
   elements: string;
+  evoLevel: number | null;
+  evoItem: string | null;
   index: string;
 }
