@@ -20,7 +20,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
       }"
     >
       <div class="overlay-top">
-        <div class="overlay-top-content">
+        <div class="overlay-top-container">
           <svg
             class="blob"
             viewBox="-25 -25 50 50"
@@ -50,7 +50,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
             </svg>
           </button>
 
-          <div>
+          <div class="overlay-pokemon-details">
             <div>
               <h2>
                 {{ data.pokemonObj()?.name }}
@@ -64,7 +64,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
               </span>
             </div>
 
-            <p>
+            <p class="index-number">
               {{ data.pokemonObj()?.index }}
             </p>
           </div>
