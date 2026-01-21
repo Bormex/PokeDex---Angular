@@ -38,8 +38,8 @@
 
         .overlay-top-container {
             width: 100%;
-            max-width: 1440px;
-            margin: auto;
+            // max-width: 1440px;
+            // margin: auto;
             position: relative;
 
             .blob {
@@ -122,8 +122,8 @@
         align-items: center;
         position: relative;
         padding: 64px;
-        max-width: 1440px;
-        margin: 0 auto;
+        // max-width: 1440px;
+        // margin: 0 auto;
         background: white;
         border-top-left-radius: 48px;
         border-top-right-radius: 48px;
@@ -160,8 +160,15 @@
     }
 
     .tab-content {
-        max-width: 1440px;
-        margin: 0 auto;
+
+      &-about {
+
+      }
+
+      &-stats {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
 
         .stat-container {
           width: 100%;
@@ -170,9 +177,10 @@
 
           .stat-values {
             display: flex;
+            justify-content: space-between;
             width: 25%;
             gap: 16px;
-            justify-content: space-between;
+            margin-right: 24px;
           }
 
           .stat-progress-border {
@@ -185,5 +193,16 @@
             }
           }
         }
+      }
+
+      &-evolution {
+        img {
+          width: 128px;
+        }
+      }
+
+      &-moves {
+
+      }
     }
 }
