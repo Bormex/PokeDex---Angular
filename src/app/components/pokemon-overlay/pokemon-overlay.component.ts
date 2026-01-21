@@ -217,7 +217,6 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
                     <p>{{ stat?.name }}</p>
                     <p>{{ stat?.value }}</p>
                   </div>
-
                   <div class="stat-progress-border">
                     <div
                       class="stat-progress-bar"
@@ -232,28 +231,50 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
             <div class="tab-content-evolution max-width">
               <h2>Evolution Chain</h2>
               @for (evolution of data.pokemonObj()?.evolutions; track $index) {
-                <div class="here">
-                  @if ($index == 0 || $index == 1) {
-                    <img src="{{ evolution.img }}" alt="" />
-                    <p>
-                      {{ evolution?.name }}
-                    </p>
-                  }
-                </div>
-                @if ($index == 1) {
-                  <div>
-                    <img src="{{ evolution.img }}" alt="" />
-                    <p>
-                      {{ evolution?.name }}
-                    </p>
+                
+                @if ($index < 1) {
+                  <div class="first-chain">
+                    @for (evolution of data.pokemonObj()?.evolutions; track $index) {
+                      
+                      @if ($index == 0 || $index == 1) {
+                        <div class="evo-pokemon">
+                          <img src="{{ evolution.img }}" alt="" />
+                            <p>
+                              {{ (evolution?.name ?? '')[0]?.toUpperCase() + (evolution?.name ?? '').slice(1) }}
+                            </p>
+                        </div>
+                      }
+                      @if ($index == 0) {
+                        <div class="evo-level">
+                          <p>-></p>
+                          Lvl {{ evolution?.evoLevel }}
+                        </div>
+                      }
+                    
+                    }
                   </div>
                 }
-                <div>
-                  {{ evolution?.evoLevel }}
-                  @if ($index !== 2) {
-                    ->
-                  }
-                </div>
+                
+                @if ($index > 1) {
+                  <div class="second-chain">
+                    @for (evolution of data.pokemonObj()?.evolutions; track $index) {
+                      @if ($index == 1 || $index == 2) {
+                        <div class="evo-pokemon">
+                          <img src="{{ evolution.img }}" alt="" />
+                            <p>
+                            {{ (evolution?.name ?? '')[0]?.toUpperCase() + (evolution?.name ?? '').slice(1) }}
+                            </p>
+                        </div>
+                      }
+                      @if ($index == 1) {
+                        <div class="evo-level">
+                          <p>-></p>
+                          Lvl {{ evolution?.evoLevel }}
+                        </div>
+                      }
+                    }
+                  </div>
+                }
               }
             </div>
           }
