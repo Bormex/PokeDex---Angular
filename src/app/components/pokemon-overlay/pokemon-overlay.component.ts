@@ -8,7 +8,6 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
   selector: 'app-pokemon-overlay',
   imports: [CommonModule],
   template: `
-    @if (data.lodingPokemonOverlay()) {
     <div
       class="overlay"
       [ngStyle]="{
@@ -16,11 +15,11 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
           'linear-gradient(to top, ' +
           data.pokemonObj()?.elementColor +
           ', #f0fdf4)',
-        '--glow-color': data.pokemonObj()?.elementColor
+        '--glow-color': data.pokemonObj()?.elementColor,
       }"
     >
       <div class="overlay-top">
-        <div class="overlay-top-container">
+        <div class="overlay-top-container max-width">
           <svg
             class="blob"
             viewBox="-25 -25 50 50"
@@ -57,9 +56,11 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
               </h2>
 
               <span>
-                @for (element of data.pokemonObj()?.elements ?? []; track
-                $index) {
-                <p>{{ element[0].toUpperCase() + element.slice(1) }}</p>
+                @for (
+                  element of data.pokemonObj()?.elements ?? [];
+                  track $index
+                ) {
+                  <p>{{ element[0].toUpperCase() + element.slice(1) }}</p>
                 }
               </span>
             </div>
@@ -72,7 +73,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
       </div>
 
       <div class="overlay-bottom">
-        <div class="overlay-bottom-content">
+        <div class="overlay-bottom-content max-width">
           <svg
             class="pokeball"
             width="400"
@@ -133,7 +134,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
               color:
                 activeTab() === 'about'
                   ? data.pokemonObj()?.elementColor
-                  : 'gray'
+                  : 'gray',
             }"
           >
             About
@@ -144,7 +145,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
               color:
                 activeTab() === 'stats'
                   ? data.pokemonObj()?.elementColor
-                  : 'gray'
+                  : 'gray',
             }"
           >
             Base Stats
@@ -155,7 +156,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
               color:
                 activeTab() === 'evolution'
                   ? data.pokemonObj()?.elementColor
-                  : 'gray'
+                  : 'gray',
             }"
           >
             Evolution
@@ -166,75 +167,104 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
               color:
                 activeTab() === 'moves'
                   ? data.pokemonObj()?.elementColor
-                  : 'gray'
+                  : 'gray',
             }"
           >
             Moves
           </button>
         </div>
-        @switch (activeTab()) { @case ('about') {
-        <div class="tab-content">
-          <p><strong>Species:</strong> {{ data.pokemonObj()?.genetik }}</p>
-          <p>
-            <strong>Height:</strong>
-            {{ getHeightInFeetAndInches(data.pokemonObj()?.height) }} ({{
-              (data.pokemonObj()?.height?.toFixed(2) ?? 0)
-                .toString()
-                .replace('.', ',')
-            }}
-            m)
-          </p>
-          <p>
-            <strong>Weight:</strong>
-            {{ ((data.pokemonObj()?.weight ?? 0) * 2.205).toFixed(1) }} lbs ({{
-              (data.pokemonObj()?.weight ?? 0).toString().replace('.', ',')
-            }}
-            kg)
-          </p>
-          <p>
-            <strong>Original name:</strong>
-            {{ data.pokemonObj()?.original_name }}
-          </p>
-          <p>
-            <strong>Abilities:</strong>
-            @for (ability of data.pokemonObj()?.abilities ?? []; track $index) {
-            <span>{{ ability[0].toUpperCase() + ability.slice(1) }}</span>
-            }
-          </p>
-        </div>
-        } @case ('stats') {
-        <div class="tab-content">
-          @for (stat of data.pokemonObj()?.stats ; track $index) {
-            <div class="stat-container">
-              <div class="stat-values">
-                <p>{{ stat?.name }}</p>
-                <p>{{ stat?.value }}</p>
-              </div>
-
-              <div class="stat-progress-border">
-                <div
-                  class="stat-progress-bar"
-                  [ngStyle]="{ width: stat?.percent_progressbar + '%' }"
-                ></div>
-              </div>
+        @switch (activeTab()) {
+          @case ('about') {
+            <div class="tab-content-about max-width">
+              <p><strong>Species:</strong> {{ data.pokemonObj()?.genetik }}</p>
+              <p>
+                <strong>Height:</strong>
+                {{ getHeightInFeetAndInches(data.pokemonObj()?.height) }} ({{
+                  (data.pokemonObj()?.height?.toFixed(2) ?? 0)
+                    .toString()
+                    .replace('.', ',')
+                }}
+                m)
+              </p>
+              <p>
+                <strong>Weight:</strong>
+                {{ ((data.pokemonObj()?.weight ?? 0) * 2.205).toFixed(1) }}
+                lbs ({{
+                  (data.pokemonObj()?.weight ?? 0).toString().replace('.', ',')
+                }}
+                kg)
+              </p>
+              <p>
+                <strong>Original name:</strong>
+                {{ data.pokemonObj()?.original_name }}
+              </p>
+              <p>
+                <strong>Abilities:</strong>
+                @for (
+                  ability of data.pokemonObj()?.abilities ?? [];
+                  track $index
+                ) {
+                  <span>{{ ability[0].toUpperCase() + ability.slice(1) }}</span>
+                }
+              </p>
             </div>
           }
-        </div>
-        } @case ('evolution') {
-        <div class="tab-content">
-          <h2>Evolution Chain</h2>
-          @for (evolution of data.pokemonObj()?.evolutions; track $index) {
-            <p>{{ evolution?.name }} {{evolution?.evoLevel}}</p>
+          @case ('stats') {
+            <div class="tab-content-stats max-width">
+              @for (stat of data.pokemonObj()?.stats; track $index) {
+                <div class="stat-container">
+                  <div class="stat-values">
+                    <p>{{ stat?.name }}</p>
+                    <p>{{ stat?.value }}</p>
+                  </div>
+
+                  <div class="stat-progress-border">
+                    <div
+                      class="stat-progress-bar"
+                      [ngStyle]="{ width: stat?.percent_progressbar + '%' }"
+                    ></div>
+                  </div>
+                </div>
+              }
+            </div>
           }
-        </div>
-        } @case ('moves') {
-        <div class="tab-content">
-          <p>Moves Content</p>
-        </div>
-        } }
+          @case ('evolution') {
+            <div class="tab-content-evolution max-width">
+              <h2>Evolution Chain</h2>
+              @for (evolution of data.pokemonObj()?.evolutions; track $index) {
+                <div class="here">
+                  @if ($index == 0 || $index == 1) {
+                    <img src="{{ evolution.img }}" alt="" />
+                    <p>
+                      {{ evolution?.name }}
+                    </p>
+                  }
+                </div>
+                @if ($index == 1) {
+                  <div>
+                    <img src="{{ evolution.img }}" alt="" />
+                    <p>
+                      {{ evolution?.name }}
+                    </p>
+                  </div>
+                }
+                <div>
+                  {{ evolution?.evoLevel }}
+                  @if ($index !== 2) {
+                    ->
+                  }
+                </div>
+              }
+            </div>
+          }
+          @case ('moves') {
+            <div class="tab-content-moves max-width">
+              <p>Moves Content</p>
+            </div>
+          }
+        }
       </div>
     </div>
-    }
   `,
   styleUrl: './pokemon-overlay.component.scss',
 })
@@ -260,5 +290,4 @@ export class PokemonOverlayComponent {
     this.activeTab.set('about');
     this.toggleScrollbar.emit();
   }
-
 }
