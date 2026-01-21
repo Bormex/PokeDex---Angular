@@ -15,45 +15,52 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
   selector: 'app-poke-card',
   imports: [NgStyle, PokemonOverlayComponent],
   template: `
-    <app-pokemon-overlay (toggleScrollbar)="toggleScrollBarOnLoad('auto')"></app-pokemon-overlay>
+
+    @if (this.lodingPokemonOverlay()) {
+      <app-pokemon-overlay
+      (toggleScrollbar)="toggleScrollBarOnLoad('auto')"
+      ></app-pokemon-overlay>
+    }
 
     <main>
-      <div id="pokemons">
-        @for(pokemon of pokemonBufferArray; track $index) {
-        <div
-          id="pokemon"
-          [ngStyle]="{
-            background:
-              'linear-gradient(to top, ' + pokemon.elementColor + ', #f0fdf4)',
-            '--glow-color': pokemon.elementColor
-          }"
-          [title]="pokemon.name"
-          (click)="getPokemoneDetails({pokemon})"
-        >
-          <p id="index">{{ pokemon.index }}</p>
-          <span class="pokeDetails">
-            <p class="name">{{ pokemon.name }}</p>
-            <p>{{ pokemon.original_name }}</p>
-            @for (element of pokemon.elements; track $index) {
-            <p class="element">
-              {{ element[0].toUpperCase() + element.slice(1) }}
-            </p>
-            }
-          </span>
+      <div id="pokemons" class="max-width">
+        @for (pokemon of pokemonBufferArray; track $index) {
+          <div
+            id="pokemon"
+            [ngStyle]="{
+              background:
+                'linear-gradient(to top, ' +
+                pokemon.elementColor +
+                ', #f0fdf4)',
+              '--glow-color': pokemon.elementColor,
+            }"
+            [title]="pokemon.name"
+            (click)="getPokemoneDetails({ pokemon })"
+          >
+            <p id="index">{{ pokemon.index }}</p>
+            <span class="pokeDetails">
+              <p class="name">{{ pokemon.name }}</p>
+              <p>{{ pokemon.original_name }}</p>
+              @for (element of pokemon.elements; track $index) {
+                <p class="element">
+                  {{ element[0].toUpperCase() + element.slice(1) }}
+                </p>
+              }
+            </span>
 
-          <img
-            style="background-image: url('/assets/icons/elements/fire.svg');"
-            id="pokemonImage"
-            src="{{ pokemon.img }}"
-            alt="{{ pokemon.img }}"
-          />
+            <img
+              style="background-image: url('/assets/icons/elements/fire.svg');"
+              id="pokemonImage"
+              src="{{ pokemon.img }}"
+              alt="{{ pokemon.img }}"
+            />
 
-          <img
-            id="pokemonElement"
-            src="/assets/icons/elements/{{ pokemon.elements[0] }}.svg"
-            alt=""
-          />
-        </div>
+            <img
+              id="pokemonElement"
+              src="/assets/icons/elements/{{ pokemon.elements[0] }}.svg"
+              alt=""
+            />
+          </div>
         }
       </div>
 
@@ -109,7 +116,6 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     this.toggleScrollBarOnLoad('hidden');
     console.log('Evo Chain:', pokemon.pokemon.evolutions);
     console.log(pokemon.pokemon);
-
   }
 
   loadMore() {
@@ -120,7 +126,7 @@ export class PokeCardComponent implements OnInit, OnDestroy {
 
   loadPokemons(startIndexPokemon: number) {
     const sub = from(
-      Array.from({ length: 20 }, (_, i) => startIndexPokemon + i)
+      Array.from({ length: 20 }, (_, i) => startIndexPokemon + i),
     )
       .pipe(concatMap((id) => this.getPokemonWithEvolution(id)))
       .subscribe({
@@ -138,32 +144,32 @@ export class PokeCardComponent implements OnInit, OnDestroy {
       switchMap((pokemonData) =>
         this.pokeApi
           .fetchPokemonData(`pokemon-species/${id}`)
-          .pipe(map((species) => ({ pokemonData, species })))
+          .pipe(map((species) => ({ pokemonData, species }))),
       ),
       switchMap(({ pokemonData, species }) =>
         this.pokeApi
           .fetchPokemonData(
-            species.evolution_chain.url.split('https://pokeapi.co/api/v2/')[1]
+            species.evolution_chain.url.split('https://pokeapi.co/api/v2/')[1],
           )
           .pipe(
             map((evolutionChain) => ({
               pokemonData,
               evolutionChain,
               species,
-            }))
-          )
+            })),
+          ),
       ),
       map(({ pokemonData, evolutionChain, species }) => {
         this.pokeCardInterface(pokemonData, evolutionChain, species);
         return void 0;
-      })
+      }),
     );
   }
 
   pokeCardInterface(
     pokemonData: PokemonData,
     evolutionChain: { chain: EvolutionChainNode },
-    species: Species
+    species: Species,
   ) {
     let totalStat = 0;
 
@@ -176,7 +182,7 @@ export class PokeCardComponent implements OnInit, OnDestroy {
           value: s.base_stat,
           percent_progressbar: +((s.base_stat / 180) * 100).toFixed(2),
         };
-      }
+      },
     );
 
     stats.push({
@@ -186,27 +192,27 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     });
 
     this.pokemonBufferArray.push(
-      this.pokemon = {
+      (this.pokemon = {
         name: pokemonData.name[0].toUpperCase() + pokemonData.name.slice(1),
         original_name: species.names[0].name,
         index: pokemonData.id.toString().padStart(4, '0'),
         img: pokemonData.sprites.other['official-artwork'].front_default,
         gifImg: this.getGifImg(
-          pokemonData.sprites.other.showdown.front_default
+          pokemonData.sprites.other.showdown.front_default,
         ), // DAS KANN null sein -> wollen aber undefined um es einheitlich zu halten
         height: pokemonData.height / 10,
         weight: pokemonData.weight / 10,
         abilities: pokemonData.abilities.map(
-          (a: { ability: { name: string | any[] } }) => a.ability.name
+          (a: { ability: { name: string | any[] } }) => a.ability.name,
         ),
         elements: pokemonData.types.map(
-          (t: { type: { name: string | any[] } }) => t.type.name
+          (t: { type: { name: string | any[] } }) => t.type.name,
         ),
         stats,
         elementColor: this.getElementColor(pokemonData.types),
         evolutions: this.extractEvolutions(evolutionChain.chain),
         genetik: this.getGenetik(species.genera),
-      } as Pokemon
+      } as Pokemon),
     );
   }
 
@@ -243,14 +249,13 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     fetchEvolutionPokemons(chain);
 
     async function fetchEvolutionPokemons(chain: EvolutionChainNode) {
-
       const pokemonIndexNumber = chain.species.url
         .split('pokemon-species/')[1]
         .slice(0, chain.species.url.split('pokemon-species/')[1].length - 1);
 
       const fetchPokemonData = await (
         await fetch(
-          `https://pokeapi.co/api/v2/pokemon-species/${pokemonIndexNumber}/`
+          `https://pokeapi.co/api/v2/pokemon-species/${pokemonIndexNumber}/`,
         )
       ).json();
 
@@ -268,11 +273,10 @@ export class PokeCardComponent implements OnInit, OnDestroy {
         evoLevel: evoTrigger.level,
         evoItem: evoTrigger.item,
         elements: fetchPokemonElements.types.map(
-          (t: { type: { name: string } }) => t.type.name
+          (t: { type: { name: string } }) => t.type.name,
         ),
         index: fetchPokemonData.id.toString().padStart(4, '0'),
       });
-
 
       // Evolution Chain Zahl -> solange wie chain.evolves_to vorhanden/ !== 0
       for (const evo of chain.evolves_to) {
@@ -301,13 +305,10 @@ export class PokeCardComponent implements OnInit, OnDestroy {
 
         return { level: null, item: null };
       }
-
     }
 
     return evoPokemon;
-
   }
-
 
   toggleScrollBarOnLoad(attribute: string) {
     document.body.style.overflow = attribute;
