@@ -196,6 +196,38 @@
       }
 
       &-evolution {
+        height: 73%;
+        overflow: auto;
+
+        .first-chain, .second-chain {
+          display: flex;
+          justify-content: space-evenly;
+          align-items: center;
+          gap: 24px;
+          margin-bottom: 48px;
+
+          .evo-pokemon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+          }
+
+          .evo-level {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-weight: bold;
+          }
+        }
+
+        
+
+        h2 {
+          margin-bottom: 24px;
+          filter: drop-shadow(-4px 2px 3px rgba(0, 0, 0, 0.1));
+        }
+
         img {
           width: 128px;
         }
