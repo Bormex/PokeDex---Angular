@@ -235,8 +235,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
                 @if ($index < 1) {
                   <div class="first-chain">
                     @for (evolution of data.pokemonObj()?.evolutions; track $index) {
-                      
-                      @if ($index == 0 || $index == 1) {
+                      @if ($index <= 1) {
                         <div class="evo-pokemon">
                           <img src="{{ evolution.img }}" alt="" />
                             <p>
@@ -250,7 +249,6 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
                           Lvl {{ evolution?.evoLevel }}
                         </div>
                       }
-                    
                     }
                   </div>
                 }
@@ -258,7 +256,7 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
                 @if ($index > 1) {
                   <div class="second-chain">
                     @for (evolution of data.pokemonObj()?.evolutions; track $index) {
-                      @if ($index == 1 || $index == 2) {
+                      @if ($index >= 1) {
                         <div class="evo-pokemon">
                           <img src="{{ evolution.img }}" alt="" />
                             <p>
