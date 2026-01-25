@@ -227,55 +227,33 @@ type TabType = 'about' | 'stats' | 'evolution' | 'moves';
               }
             </div>
           }
-          @case ('evolution') {
-            <div class="tab-content-evolution max-width">
-              <h2>Evolution Chain</h2>
-              @for (evolution of data.pokemonObj()?.evolutions; track $index) {
-                
-                @if ($index < 1) {
-                  <div class="first-chain">
-                    @for (evolution of data.pokemonObj()?.evolutions; track $index) {
-                      @if ($index <= 1) {
-                        <div class="evo-pokemon">
-                          <img src="{{ evolution.img }}" alt="" />
-                            <p>
-                              {{ (evolution?.name ?? '')[0]?.toUpperCase() + (evolution?.name ?? '').slice(1) }}
-                            </p>
-                        </div>
-                      }
-                      @if ($index == 0) {
-                        <div class="evo-level">
-                          <p>-></p>
-                          Lvl {{ evolution?.evoLevel }}
-                        </div>
-                      }
-                    }
+        @case ('evolution') {
+          <div class="tab-content-evolution max-width">
+            <h2>Evolution Chain</h2>
+
+            @for (chain of evolutionChains; track $index) {
+              <div class="chain">
+                @for (evo of chain; track $index) {
+                  <div class="evo-pokemon">
+                    <img src="{{evo.img}}" alt="{{evo.img}}">
+                    <p>{{ evo.name[0].toUpperCase() + evo.name.slice(1) }}</p>
                   </div>
+                  @if ($index < chain.length - 1) {
+                    <div class="evo-arrow">
+                      <p>
+                        →
+                      </p>
+                      <span>
+                        <p>Level</p>
+                        <p>{{evo.evoLevel}}</p>
+                      </span>
+                    </div>
+                  }
                 }
-                
-                @if ($index > 1) {
-                  <div class="second-chain">
-                    @for (evolution of data.pokemonObj()?.evolutions; track $index) {
-                      @if ($index >= 1) {
-                        <div class="evo-pokemon">
-                          <img src="{{ evolution.img }}" alt="" />
-                            <p>
-                            {{ (evolution?.name ?? '')[0]?.toUpperCase() + (evolution?.name ?? '').slice(1) }}
-                            </p>
-                        </div>
-                      }
-                      @if ($index == 1) {
-                        <div class="evo-level">
-                          <p>-></p>
-                          Lvl {{ evolution?.evoLevel }}
-                        </div>
-                      }
-                    }
-                  </div>
-                }
-              }
-            </div>
-          }
+              </div>
+            }
+          </div>
+        }
           @case ('moves') {
             <div class="tab-content-moves max-width">
               <p>Moves Content</p>
@@ -309,4 +287,10 @@ export class PokemonOverlayComponent {
     this.activeTab.set('about');
     this.toggleScrollbar.emit();
   }
+
+  get evolutionChains() {
+    const evos = this.data.pokemonObj()?.evolutions ?? [];
+    return evos.slice(0, -1).map((_, i) => evos.slice(i, i + 2));
+  }
+
 }
