@@ -16,7 +16,7 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
   imports: [NgStyle, PokemonOverlayComponent],
   template: `
 
-    @if (this.lodingPokemonOverlay()) {
+    @if (this.loadingPokemonOverlay()) {
       <app-pokemon-overlay
       (toggleScrollbar)="toggleScrollBarOnLoad('auto')"
       ></app-pokemon-overlay>
@@ -35,7 +35,7 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
               '--glow-color': pokemon.elementColor,
             }"
             [title]="pokemon.name"
-            (click)="getPokemoneDetails({ pokemon })"
+            (click)="openOverlayModal({ pokemon })"
           >
             <p id="index">{{ pokemon.index }}</p>
             <span class="pokeDetails">
@@ -75,7 +75,7 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
 export class PokeCardComponent implements OnInit, OnDestroy {
   constructor(private pokeApi: PokeApiService) {}
 
-  readonly lodingPokemonOverlay = signal(false);
+  readonly loadingPokemonOverlay = signal(false);
   readonly pokemonObj = signal<Pokemon | null>(null);
   @Output() pokemonsLoaded = new EventEmitter<void>();
 
@@ -110,12 +110,16 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     this.toggleScrollBarOnLoad('hidden');
   }
 
-  getPokemoneDetails(pokemon: { pokemon: Pokemon }) {
-    this.pokemonObj.set(pokemon.pokemon);
-    this.lodingPokemonOverlay.set(true);
-    this.toggleScrollBarOnLoad('hidden');
-    console.log('Evo Chain:', pokemon.pokemon.evolutions);
+  openOverlayModal(pokemon: { pokemon: Pokemon }) {
     console.log(pokemon.pokemon);
+    
+    this.pokemonObj.set(pokemon.pokemon);
+    this.loadingPokemonOverlay.set(true);
+    this.toggleScrollBarOnLoad('hidden');
+    console.log(this.pokemonBufferArray, "current Pokemon is:", pokemon.pokemon.index);
+    
+    // console.log('Evo Chain:', pokemon.pokemon.evolutions);
+    // console.log(pokemon.pokemon);
   }
 
   loadMore() {
@@ -253,7 +257,7 @@ export class PokeCardComponent implements OnInit, OnDestroy {
         .split('pokemon-species/')[1]
         .slice(0, chain.species.url.split('pokemon-species/')[1].length - 1);
 
-      const fetchPokemonData = await (
+      const fetchPokemonSpeciesData = await (
         await fetch(
           `https://pokeapi.co/api/v2/pokemon-species/${pokemonIndexNumber}/`,
         )
@@ -266,16 +270,16 @@ export class PokeCardComponent implements OnInit, OnDestroy {
       const evoTrigger = getEvolutionTrigger(chain);
 
       evoPokemon.push({
-        name: fetchPokemonData.name,
-        original_name: fetchPokemonData.names[0].name,
-        img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${fetchPokemonData.id}.png`,
-        gifImg: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${fetchPokemonData.id}.gif`,
+        name: fetchPokemonSpeciesData.name,
+        original_name: fetchPokemonSpeciesData.names[0].name,
+        img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${fetchPokemonSpeciesData.id}.png`,
+        gifImg: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${fetchPokemonSpeciesData.id}.gif`,
         evoLevel: evoTrigger.level,
         evoItem: evoTrigger.item,
         elements: fetchPokemonElements.types.map(
           (t: { type: { name: string } }) => t.type.name,
         ),
-        index: fetchPokemonData.id.toString().padStart(4, '0'),
+        index: fetchPokemonSpeciesData.id.toString().padStart(4, '0'),
       });
 
       // Evolution Chain Zahl -> solange wie chain.evolves_to vorhanden/ !== 0
