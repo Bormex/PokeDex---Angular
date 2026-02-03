@@ -5,7 +5,7 @@ import { Component } from '@angular/core';
   selector: 'app-loading-spinner',
   imports: [],
   template: `
-    <img src="/assets/icons/pokemon-loading.svg" alt="">
+    <img src="./assets/icons/pokemon-loading.svg" alt="">
 
     <span>
       Loading Pokemon's

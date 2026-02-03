@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, viewChild, ViewChild, ViewChildren, viewChildren } from '@angular/core';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgStyle } from '@angular/common';
 import { PokeCardComponent } from "./components/poke-card/poke-card.component";
@@ -10,7 +10,7 @@ import { Pokemon } from './interfaces/pokemon.interface';
   imports: [PokeCardComponent, LoadingSpinnerComponent, FormsModule, NgStyle],
   template: `
     <header>
-      <img src="/assets/img/title.png" alt="/assets/img/title.png" />
+      <img src="./assets/img/title.png" alt="./assets/img/title.png" />
       <input
         type="text"
         name="search"
@@ -36,7 +36,6 @@ import { Pokemon } from './interfaces/pokemon.interface';
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-
   constructor() {
     this.allPokemonsRendered = false;
     this.searchBarOpen = false;

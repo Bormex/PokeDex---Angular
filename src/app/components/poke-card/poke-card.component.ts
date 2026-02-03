@@ -49,7 +49,7 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
             </span>
 
             <img
-              style="background-image: url('/assets/icons/elements/fire.svg');"
+              style="background-image: url('./assets/icons/elements/fire.svg');"
               id="pokemonImage"
               src="{{ pokemon.img }}"
               alt="{{ pokemon.img }}"
@@ -57,7 +57,7 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
 
             <img
               id="pokemonElement"
-              src="/assets/icons/elements/{{ pokemon.elements[0] }}.svg"
+              src="./assets/icons/elements/{{ pokemon.elements[0] }}.svg"
               alt=""
             />
           </div>
@@ -66,7 +66,7 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
 
       <button id="loadMoreButton" (click)="loadMore()">
         Load More
-        <img src="/assets/icons/pokeball.svg" alt="" />
+        <img src="./assets/icons/pokeball.svg" alt="" />
       </button>
     </main>
   `,
