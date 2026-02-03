@@ -42,6 +42,7 @@ export class AppComponent {
     this.searchBarOpen = false;
   }
 
+  title = 'pokedex';
   allPokemonsRendered: boolean;
   pokemonBuffer!: Pokemon[];
   searchBarOpen: boolean;
