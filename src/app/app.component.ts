@@ -10,7 +10,8 @@ import { Pokemon } from './interfaces/pokemon.interface';
   imports: [PokeCardComponent, LoadingSpinnerComponent, FormsModule, NgStyle],
   template: `
     <header>
-      <h1>{{ title }}</h1>
+      <img src="/assets/img/title.png" alt="/assets/img/title.png" />
+      <!-- <h1>{{ title }}</h1> -->
       <input
         type="text"
         name="search"
@@ -19,27 +20,26 @@ import { Pokemon } from './interfaces/pokemon.interface';
         (input)="searchingPokemon(this.searchQuery.toLowerCase())"
         (focus)="openSearchBar()"
         [(ngModel)]="searchQuery"
-        [ngStyle]="searchBarOpen ? { 'width': '100%', 'padding': '0.5rem 1.75rem', 'cursor': 'auto' } : {}"
+        [ngStyle]="
+          searchBarOpen
+            ? { width: '100%', padding: '0.5rem 1.75rem', cursor: 'auto' }
+            : {}
+        "
       />
     </header>
 
-    @if(!allPokemonsRendered) {
+    @if (!allPokemonsRendered) {
       <app-loading-spinner></app-loading-spinner>
     }
 
-
-    <app-poke-card (pokemonsLoaded)="togglePokemonSpinner()">
-    </app-poke-card>
-
+    <app-poke-card (pokemonsLoaded)="togglePokemonSpinner()"> </app-poke-card>
   `,
   styleUrl: './app.component.scss',
 })
 export class AppComponent {
-
   constructor() {
     this.allPokemonsRendered = false;
     this.searchBarOpen = false;
-
   }
 
   title = 'Pokédex';
@@ -56,38 +56,35 @@ export class AppComponent {
     this.searchBarOpen = true;
   }
 
-
   /*
-  *
-  * Function for searching Pokemon by name JUST for currently loaded Pokemons NOT all Pokemons from API
-  */
+   *
+   * Function for searching Pokemon by name JUST for currently loaded Pokemons NOT all Pokemons from API
+   */
   searchingPokemon(tippedLetters: string) {
     const allLoadedPokemonCards = document.querySelectorAll('#pokemon');
     const allLoadedPokemonNameFields = document.getElementsByClassName('name');
     const renderMoreButton = document.getElementById('loadMoreButton');
 
     if (this.searchQuery.length >= 1) {
-
       for (let i = 0; i < allLoadedPokemonNameFields.length; i++) {
-        const pokemonLoadedNames = allLoadedPokemonNameFields[i].innerHTML.toLocaleLowerCase();
+        const pokemonLoadedNames =
+          allLoadedPokemonNameFields[i].innerHTML.toLocaleLowerCase();
         allLoadedPokemonCards[i].classList.add('none');
         renderMoreButton!.classList.add('none');
 
-          if (pokemonLoadedNames[0] === tippedLetters[0]) {  // first letter match
-            if (pokemonLoadedNames.includes(tippedLetters)) {  // includes the tipped letters
-             allLoadedPokemonCards[i].classList.remove('none')
-            }
+        if (pokemonLoadedNames[0] === tippedLetters[0]) {
+          // first letter match
+          if (pokemonLoadedNames.includes(tippedLetters)) {
+            // includes the tipped letters
+            allLoadedPokemonCards[i].classList.remove('none');
           }
-
+        }
       }
-
     } else {
       renderMoreButton!.classList.remove('none');
       for (let i = 0; i < allLoadedPokemonCards.length; i++) {
         allLoadedPokemonCards[i].classList.remove('none');
       }
     }
-
   }
-
 }

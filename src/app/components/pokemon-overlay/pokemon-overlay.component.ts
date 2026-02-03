@@ -30,7 +30,7 @@ type TabType = 'about' | 'stats' | 'evolution';
           <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Layer_1" viewBox="0 0 512.002 512.002" xml:space="preserve">
             <path style="fill:#3D6DEB;" d="M508.084,268.926c0.222-0.33,0.414-0.675,0.616-1.015c0.186-0.312,0.382-0.614,0.554-0.936  c0.188-0.351,0.346-0.709,0.514-1.066c0.157-0.332,0.323-0.658,0.462-0.998c0.146-0.349,0.262-0.706,0.388-1.06  c0.13-0.362,0.27-0.718,0.382-1.089c0.109-0.358,0.188-0.721,0.279-1.085c0.095-0.374,0.199-0.743,0.275-1.125  c0.084-0.422,0.135-0.849,0.196-1.275c0.045-0.326,0.107-0.647,0.14-0.976c0.152-1.53,0.152-3.07,0-4.6  c-0.033-0.329-0.095-0.65-0.14-0.976c-0.061-0.427-0.112-0.852-0.196-1.275c-0.076-0.382-0.18-0.749-0.275-1.125  c-0.092-0.361-0.169-0.726-0.279-1.085c-0.112-0.369-0.251-0.726-0.382-1.089c-0.126-0.354-0.242-0.711-0.388-1.06  c-0.14-0.34-0.306-0.666-0.462-0.998c-0.168-0.355-0.326-0.715-0.514-1.064c-0.171-0.321-0.366-0.624-0.554-0.936  c-0.203-0.34-0.396-0.684-0.616-1.015c-0.233-0.351-0.493-0.68-0.745-1.015c-0.203-0.272-0.391-0.549-0.61-0.815  c-0.487-0.594-1.002-1.167-1.545-1.71l-58.179-58.179c-9.089-9.089-23.824-9.089-32.913,0s-9.089,23.824,0,32.912l18.454,18.454  H23.273C10.42,232.729,0,243.149,0,256.002c0,12.853,10.42,23.273,23.273,23.273h409.272l-18.454,18.452  c-9.089,9.089-9.089,23.824,0,32.912c4.544,4.544,10.501,6.817,16.455,6.817c5.956,0,11.913-2.271,16.457-6.817l58.179-58.177  c0.543-0.543,1.058-1.116,1.545-1.711c0.219-0.264,0.406-0.543,0.61-0.813C507.589,269.605,507.85,269.276,508.084,268.926z"/>
           </svg>
-            
+
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="-15 -15 55 35" width="300" height="300">
             <defs>
               <linearGradient id="sw-gradient" x1="0" x2="1" y1="1" y2="0">
@@ -47,9 +47,9 @@ type TabType = 'about' | 'stats' | 'evolution';
 
 
           </div>
-        </div>  
+        </div>
       } -->
-      
+
       <!-- <div class="swipe">
         @if (pokemon?.index !== '0001') {
           <div class="swipe-left" (click)="swipeToNextPokemon('previous')">
@@ -97,9 +97,9 @@ type TabType = 'about' | 'stats' | 'evolution';
 
           <div class="overlay-pokemon-details">
             <div>
-              <h2>
+              <h1>
                 {{ pokemon?.name }}
-              </h2>
+              </h1>
 
               <span>
                 @for (
@@ -180,7 +180,7 @@ type TabType = 'about' | 'stats' | 'evolution';
             />
 
             @if (data.pokemonBufferArray[data.pokemonBufferArray.length - 1].index !== pokemon?.index) {
-              <img class="nextPokemon" src="{{ nextPokemon.img }}" alt="" (click)="swipeToNextPokemon('next')">              
+              <img class="nextPokemon" src="{{ nextPokemon.img }}" alt="" (click)="swipeToNextPokemon('next')">
             }
           </div>
 
@@ -203,7 +203,7 @@ type TabType = 'about' | 'stats' | 'evolution';
                 activeTab() === 'stats'
                   ? 'black'
                   : 'lightgray',
-              
+
             }"
             [ngClass]="{ 'active': activeTab() === 'stats' }"
           >
@@ -222,18 +222,18 @@ type TabType = 'about' | 'stats' | 'evolution';
             <p>Evolution</p>
           </button>
         </div>
-        
+
         @switch (activeTab()) {
           @case ('about') {
             <div class="tab-content-about max-width">
               <div>
-                <p>Species</p> 
+                <p>Species</p>
                 <p>Height</p>
                 <p>Weight</p>
                 <p>Original name</p>
                 <p>Abilities</p>
-                
-            
+
+
               </div>
               <div>
                 <p>
@@ -262,7 +262,7 @@ type TabType = 'about' | 'stats' | 'evolution';
                   ability of pokemon?.abilities ?? [];
                   track $index
                   ) {
-                    
+
                     @if (((pokemon?.abilities?.length ?? 0) - 1) !== $index) {
                      {{ ability[0].toUpperCase() + ability.slice(1) }},
                     } @else {
@@ -271,7 +271,7 @@ type TabType = 'about' | 'stats' | 'evolution';
                   }
                 </p>
               </div>
-              
+
             </div>
           }
           @case ('stats') {
@@ -333,7 +333,7 @@ type TabType = 'about' | 'stats' | 'evolution';
 })
 export class PokemonOverlayComponent implements AfterViewInit {
 
-  constructor() { } 
+  constructor() { }
 
   readonly data = inject(PokeCardComponent);
   readonly activeTab = signal<TabType>('about');
@@ -363,11 +363,11 @@ export class PokemonOverlayComponent implements AfterViewInit {
   }
 
   dragging = (e: MouseEvent | TouchEvent) => {
-    
+
     if (!this.isDragStarted) return;
     e.preventDefault();
     const swipeStart = this.start;
-    
+
     if (e instanceof MouseEvent ? e.pageX > swipeStart : e.touches[0].pageX > swipeStart) {
       this.swipeToNextPokemon('previous');
       this.isDragStarted = false;
@@ -409,7 +409,7 @@ export class PokemonOverlayComponent implements AfterViewInit {
       const nextIndex =
         (currentIndex + 1) % this.data.pokemonBufferArray.length;
       const nextPokemon = this.data.pokemonBufferArray[nextIndex];
-      this.data.openOverlayModal({ pokemon: nextPokemon });      
+      this.data.openOverlayModal({ pokemon: nextPokemon });
     }
 
     if (attribute === "previous") {

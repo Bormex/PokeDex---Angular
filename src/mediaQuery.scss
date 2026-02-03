@@ -1,4 +1,11 @@
-@media (max-width: 420px) {
+@media (max-width: 576px) {
+
+  :root {
+    --p-size: 20px !important;
+    --h2-size: 24px !important;
+    --h1-size: 30px !important;
+  }
+
   main {
     margin: 0 6px !important;
 
@@ -8,9 +15,38 @@
         width: 100% !important;
       }
     }
+  }
 
+  .overlay {
+    .overlay-bottom {
 
+      .overlay-bottom-content {
+        padding: 42px 0 32px;
+      }
+      .tab-content {
 
+        &-stats {
+          .stat-container {
+            flex-direction: column !important;
+            gap: 8px;
+          }
+        }
+
+        &-evolution {
+          .chain {
+            flex-direction: column !important;
+
+            .evo-arrow {
+
+              >p {
+                rotate: 90deg;
+                order: 1;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
 }

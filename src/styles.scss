@@ -1,3 +1,5 @@
+@use './mediaQuery.scss';
+
 * {
   scroll-behavior: smooth;
   box-sizing: border-box;
@@ -12,9 +14,27 @@
     cursor: pointer;
   }
 
+  @font-face {
+    font-family: "Pokemon-Solid";
+    src: url(./assets/fonts/Pokemon_solid.ttf);
+  }
+
+  @font-face {
+    font-family: "Pokemon-Hollow";
+    src: url(./assets/fonts/Pokemon_hollow.ttf);
+  }
+
+}
+
+:root {
+  --p-size: 24px;
+  --h2-size: 28px;
+  --h1-size: 34px;
 }
 
 .max-width {
   max-width: 1440px;
   margin: auto;
 }
+
+
