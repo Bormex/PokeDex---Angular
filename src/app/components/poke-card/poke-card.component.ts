@@ -111,12 +111,9 @@ export class PokeCardComponent implements OnInit, OnDestroy {
   }
 
   openOverlayModal(pokemon: { pokemon: Pokemon }) {
-    console.log(pokemon.pokemon);
-
     this.pokemonObj.set(pokemon.pokemon);
     this.loadingPokemonOverlay.set(true);
     this.toggleScrollBarOnLoad('hidden');
-    console.log(this.pokemonBufferArray, "current Pokemon is:", pokemon.pokemon.index);
   }
 
   loadMore() {
