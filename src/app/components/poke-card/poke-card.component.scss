@@ -212,39 +212,3 @@ main {
       0 -200%;
   }
 }
-
-
-// @keyframes pokeCardGlow {
-//    0% {
-//     box-shadow:
-//       0 0 4px var(--glow-color, currentColor),
-//       0 0 10px rgba(var(--glow-rgb, 255, 255, 255), 0.3),
-//       inset 0 0 12px rgba(0, 0, 0, 0.1);
-//   }
-//   25% {
-//     box-shadow:
-//       0 0 8px var(--glow-color, currentColor),
-//       0 0 18px rgba(var(--glow-rgb, 255, 255, 255), 0.4),
-//       inset 0 0 12px rgba(0, 0, 0, 0.1);
-//   }
-//   50% {
-//     box-shadow:
-//       0 0 14px var(--glow-color, currentColor),
-//       0 0 28px rgba(var(--glow-rgb, 255, 255, 255), 0.5),
-//       inset 0 0 12px rgba(0, 0, 0, 0.1);
-//   }
-//   75% {
-//     box-shadow:
-//       0 0 10px var(--glow-color, currentColor),
-//       0 0 20px rgba(var(--glow-rgb, 255, 255, 255), 0.4),
-//       inset 0 0 12px rgba(0, 0, 0, 0.1);
-//   }
-//   100% {
-//     box-shadow:
-//       0 0 6px var(--glow-color, currentColor),
-//       0 0 12px rgba(var(--glow-rgb, 255, 255, 255), 0.3),
-//       inset 0 0 12px rgba(0, 0, 0, 0.1);
-//   }
-// }
-
-

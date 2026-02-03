@@ -101,8 +101,6 @@
 
         .overlay-top-container {
             width: 100%;
-            // max-width: 1440px;
-            // margin: auto;
             position: relative;
 
             p {
@@ -191,8 +189,6 @@
         align-items: center;
         position: relative;
         padding: 42px 64px 64px;
-        // max-width: 1440px;
-        // margin: 0 auto;
         background: white;
         border-top-left-radius: 48px;
         border-top-right-radius: 48px;
@@ -386,8 +382,6 @@
             font-size: 18px;
             gap: 8px;
 
-
-
             .img-wrap {
               background: rgb(120, 120, 120, 0.1);
               border-radius: 100%;
@@ -411,8 +405,6 @@
             font-weight: bold;
           }
         }
-
-
 
         h2 {
           font-size: var(--h2-size);
