@@ -20,9 +20,16 @@
   .overlay {
     .overlay-bottom {
 
+
       .overlay-bottom-content {
+        #pokemonSwiper {
+          .previousPokemon, .nextPokemon {
+            display: none;
+          }
+        }
         padding: 42px 0 32px;
       }
+
       .tab-content {
 
         &-stats {
