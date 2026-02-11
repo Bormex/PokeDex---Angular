@@ -15,10 +15,9 @@ import { PokemonOverlayComponent } from "../pokemon-overlay/pokemon-overlay.comp
   selector: 'app-poke-card',
   imports: [NgStyle, PokemonOverlayComponent],
   template: `
-
     @if (this.loadingPokemonOverlay()) {
       <app-pokemon-overlay
-      (toggleScrollbar)="toggleScrollBarOnLoad('auto')"
+        (toggleScrollbar)="toggleScrollBarOnLoad('auto')"
       ></app-pokemon-overlay>
     }
 
@@ -104,24 +103,48 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     water: '#539DDF',
   };
 
+  /**
+   * Lifecycle hook that is called after the component has been initialized
+   * It loads the first 20 pokemons and toggles the scrollbar to hidden to prevent scrolling while loading
+   * The scrollbar is toggled back to auto after the pokemons are loaded
+   */
   ngOnInit(): void {
     const startPokemon = 1;
     this.loadPokemons(startPokemon);
     this.toggleScrollBarOnLoad('hidden');
   }
 
+  /**
+   *
+   * @param pokemon The pokemon object to be displayed in the overlay modal
+   *
+   * Function for opening the overlay modal when a pokemon card is clicked
+   * It sets the pokemon object in the signal and toggles the loading state of the overlay modal to true
+   * It also toggles the scrollbar to hidden to prevent scrolling while the overlay modal is open
+   * The scrollbar is toggled back to auto when the overlay modal is closed
+   */
   openOverlayModal(pokemon: { pokemon: Pokemon }) {
     this.pokemonObj.set(pokemon.pokemon);
     this.loadingPokemonOverlay.set(true);
     this.toggleScrollBarOnLoad('hidden');
   }
 
+  /**
+   * Function for loading more pokemons when the "Load More" button is clicked
+   * It calculates the starting point of the next batch of pokemons based on the length of the currently loaded pokemons and calls the loadPokemons function with the new starting point
+   */
   loadMore() {
     const startPointOfLastRenderedPokemonId =
       this.pokemonBufferArray.length + 1;
     this.loadPokemons(startPointOfLastRenderedPokemonId);
   }
 
+  /**
+   *
+   * @param startIndexPokemon The starting index of the pokemon to load
+   *
+   * Function for loading 20 pokemons from the API
+   */
   loadPokemons(startIndexPokemon: number) {
     const sub = from(
       Array.from({ length: 20 }, (_, i) => startIndexPokemon + i),
@@ -137,6 +160,11 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     this.subscriptions.push(sub);
   }
 
+  /**
+   *
+   * @param id The id of the pokemon to load
+   * @returns An observable that emits the pokemon data with its evolution chain and species data
+   */
   getPokemonWithEvolution(id: number) {
     return this.pokeApi.fetchPokemonData(`pokemon/${id}`).pipe(
       switchMap((pokemonData) =>
@@ -164,11 +192,21 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   *
+   * @param pokemonData Pokemon Object
+   * @param evolutionChain Evolution Chain Object
+   * @param species Pokemon Species Object
+   *
+   * Function for transforming the raw pokemon data from the API into a format that can be easily used in the template
+   * It calculates the total stats of the pokemon and the percentage of each stat for the progress bars
+   * It also extracts the evolution chain and the original name of the pokemon from the species data
+   */
   pokeCardInterface(
     pokemonData: PokemonData,
     evolutionChain: { chain: EvolutionChainNode },
     species: Species,
-  ) {
+  ): void {
     let totalStat = 0;
 
     const stats = pokemonData.stats.map(
@@ -214,13 +252,27 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   *
+   * @param ele The types of the pokemon
+   * @returns String of the element color of the Pokemon
+   *
+   * Function for getting the color of the pokemon based on its type
+   * It takes the first type of the pokemon and returns the corresponding color from the elementColor object
+   * If the pokemon has no type, it returns undefined
+   *
+   */
   getElementColor(ele: { type: { name: any } }[]) {
     const eleColorName = ele[0].type.name;
     const eleColorHexCode = this.elementColor[eleColorName];
     return eleColorHexCode;
   }
 
-  // RETURN only if an ENGLISH-VERSION is giffen
+  /**
+   *
+   * @param geneObj The genera object from the species data
+   * @returns genetic/ species of the Pokemon just in english IF NOT returns undefined
+   */
   getGenetik(geneObj: any[]): string | undefined {
     for (const e of geneObj) {
       if (e.language.name === 'en') {
@@ -230,6 +282,11 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
+  /**
+   *
+   * @param gifImage The URL of the gif image from the pokemon data
+   * @returns URL of the Gif Image IF NOT returns undefined
+   */
   getGifImg(gifImage: string) {
     if (gifImage) {
       return gifImage;
@@ -237,10 +294,20 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     return undefined;
   }
 
+  /**
+   * Unsubscribe all subscribtions if webpage is closed
+   */
   ngOnDestroy(): void {
     this.subscriptions.forEach((sub) => sub.unsubscribe());
   }
 
+  /**
+   *
+   * @param chain Chain Object from the evolution chain data
+   * @returns Evolution chain of the pokemon as an array of objects with the name, original name, image, gif image, evolution level, evolution item, elements and index of each pokemon in the evolution chain
+   *
+   * Function for extracting the evolution chain of the pokemon from the evolution chain data
+   */
   extractEvolutions(chain: EvolutionChainNode) {
     const evoPokemon: object[] = [];
 
@@ -308,6 +375,13 @@ export class PokeCardComponent implements OnInit, OnDestroy {
     return evoPokemon;
   }
 
+  /**
+   *
+   * @param attribute The attribute to set the overflow property of the body element to
+   *
+   * Function for toggling the scrollbar of the webpage when the overlay modal is open or closed
+   * It sets the overflow property of the body element to 'hidden' when the overlay modal is open to prevent scrolling and sets it back to 'auto' when the overlay modal is closed to allow scrolling again
+   */
   toggleScrollBarOnLoad(attribute: string) {
     document.body.style.overflow = attribute;
   }

@@ -18,11 +18,25 @@
   }
 
   .overlay {
+
+    .overlay-top {
+      &-container {
+        .overlay-pokemon-details {
+          margin: unset !important;
+        }
+      }
+    }
+
     .overlay-bottom {
 
 
       .overlay-bottom-content {
         #pokemonSwiper {
+
+          img {
+            width: 10rem;
+          }
+
           .previousPokemon, .nextPokemon {
             display: none;
           }

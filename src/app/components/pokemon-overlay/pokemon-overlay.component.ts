@@ -299,8 +299,11 @@ export class PokemonOverlayComponent implements AfterViewInit {
   isDragStarted: boolean = false;
 
   /**
-   * Konvertiert Höhe von Metern zu Feet und Zoll Format: X′Y"
-   * Ohne Rundung - zeigt genaue Dezimalwerte
+   *
+   * @param height Height in meters
+   * @returns Height in feet and inches (e.g. 5′7.5")
+   *
+   * Converts height from meters to feet and inches.
    */
   getHeightInFeetAndInches(height?: number): string {
     if (!height) return '0′0"';
@@ -310,12 +313,21 @@ export class PokemonOverlayComponent implements AfterViewInit {
     return `${feet}′${inches.toFixed(1)}"`;
   }
 
+  /**
+   * Closes the overlay modal and resets the active tab to 'about'.
+   */
   closeOverlay() {
     this.data.loadingPokemonOverlay.set(false);
     this.activeTab.set('about');
     this.toggleScrollbar.emit();
   }
 
+  /**
+   *
+   * Handles the dragging event to swipe between Pokémon.
+   * @param e MouseEvent or TouchEvent
+   *
+   */
   dragging = (e: MouseEvent | TouchEvent) => {
 
     if (!this.isDragStarted) return;
@@ -336,15 +348,30 @@ export class PokemonOverlayComponent implements AfterViewInit {
 
   };
 
+  /**
+   *
+   * @param e MouseEvent or TouchEvent
+   *
+   * Handles the start of a dragging event, setting the initial position and marking the dragging state as active.
+   * This method is typically called when a mousedown or touchstart event occurs on the carousel element, allowing the user to swipe between Pokémon by dragging left or right.
+   */
   dragStart = (e: MouseEvent | TouchEvent) => {
     this.start = e instanceof MouseEvent ? e.pageX : e.touches[0].pageX;
     this.isDragStarted = true;
   }
 
+  /**
+   * Handles the end of a dragging event, resetting the isDragStarted flag to false to indicate that the dragging action has concluded.
+   * This method is typically called when a mouseup or touchend event occurs, signaling that the user has finished swiping between Pokémon.
+   */
   dragEnd = () => {
     this.isDragStarted = false;
   }
 
+  /**
+   * After the view initializes, event listeners for mouse and touch events are added to the carousel element to enable dragging functionality for swiping between Pokémon.
+   * The dragStart method is called when a mousedown or touchstart event occurs, and the dragging method is called during mousemove or touchmove events to determine the direction of the swipe and trigger the appropriate Pokémon change.
+   */
   ngAfterViewInit() {
     const carouselElement = this.carouselRef()?.nativeElement;
     if (carouselElement) {
@@ -355,6 +382,14 @@ export class PokemonOverlayComponent implements AfterViewInit {
     }
   }
 
+  /**
+   *
+   * @param attribute A string indicating the direction of the swipe, either "next" or "previous".
+   *
+   * Handles the logic for swiping to the next or previous Pokémon based on the provided attribute. It calculates the current index of the displayed Pokémon in the pokemonBufferArray and determines the next or previous index accordingly, wrapping around the array if necessary. The method then opens the overlay modal with the new Pokémon data.
+   * This method is typically called when a swipe gesture is detected, allowing the user to navigate through the Pokémon by swiping left or right on the carousel.
+   *
+   */
   swipeToNextPokemon(attribute?: string) {
     if (attribute === "next") {
         const currentIndex = this.data.pokemonBufferArray.findIndex(
@@ -377,15 +412,27 @@ export class PokemonOverlayComponent implements AfterViewInit {
     }
   }
 
+  /**
+   * Returns the current Pokémon object from the parent component's data.
+   */
   get pokemon() {
     return this.data.pokemonObj();
   }
 
+  /**
+   * Returns an array of evolution chains for the current Pokémon. Each chain is an array of Pokémon objects representing a stage in the evolution process.
+   * The last element of the evolutions array is excluded to avoid incomplete chains.
+   * If there are no evolutions, an empty array is returned.
+   *
+   */
   get evolutionChains() {
     const evos = this.data.pokemonObj()?.evolutions ?? [];
     return evos.slice(0, -1).map((_, i) => evos.slice(i, i + 2));
   }
 
+  /**
+   * Calculates and returns the previous and next Pokémon based on the current Pokémon's index in the pokemonBufferArray.
+   */
   get previousPokemon() {
     const currentIndex = this.data.pokemonBufferArray.findIndex(
       (p) => p.index === this.pokemon?.index
@@ -394,6 +441,9 @@ export class PokemonOverlayComponent implements AfterViewInit {
     return this.data.pokemonBufferArray[previousIndex];
   }
 
+  /**
+   * Calculates and returns the next Pokémon based on the current Pokémon's index in the pokemonBufferArray.
+   */
   get nextPokemon() {
     const currentIndex = this.data.pokemonBufferArray.findIndex(
       (p) => p.index === this.pokemon?.index

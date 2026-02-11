@@ -47,17 +47,28 @@ export class AppComponent {
   searchBarOpen: boolean;
   searchQuery: string = '';
 
+  /**
+   * Function for toggling the loading spinner
+   */
   togglePokemonSpinner() {
     if (!this.allPokemonsRendered) this.allPokemonsRendered = true;
   }
 
+
+  /**
+   * Function for opening the search bar when the user clicks on it
+   * and changing the style of the search bar to make it more visible and user-friendly
+   */
   openSearchBar() {
     this.searchBarOpen = true;
   }
 
   /*
-   *
-   * Function for searching Pokemon by name JUST for currently loaded Pokemons NOT all Pokemons from API
+   * Function for searching the pokemons by their name and rendering only the pokemons that match the search query
+   * It also hides the "Load More" button when the user is searching for pokemons and shows it again when the search query is empty
+   * The function is triggered by the (input) event on the search input field and it takes the current value of the search input as an argument
+   * It compares the current value of the search input with the names of all loaded pokemons and renders only the pokemons that match the search query
+   * If the search query is empty, it renders all loaded pokemons and shows the "Load More" button again
    */
   searchingPokemon(tippedLetters: string) {
     const allLoadedPokemonCards = document.querySelectorAll('#pokemon');
